@@ -12,6 +12,7 @@ router.get('/', function(req, res, next) {
 //add any more routes that must be used by all eg- login, logout
 //GET routes
 router.get('/login', UserController.loginPage);
+router.get('/home', UserController.homePage);
 
 
 //POST routes

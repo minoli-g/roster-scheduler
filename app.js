@@ -17,9 +17,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-//Points to the index file of the routes folder, to guide to all routes.
-app.use(require('./routes'));
-
 
 // setting up session data storage
 const session=require("express-session");
@@ -27,6 +24,18 @@ const MySQLStore=require('express-mysql-session')(session);
 
 var connection = require('./config/db');
 var sessionStore = new MySQLStore({}/* session store options */, connection);
+
+app.use(session({
+	key: 'session_cookie_name',
+	secret: 'session_cookie_secret',
+	store: sessionStore,
+	resave: false,
+	saveUninitialized: true,
+  cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
+}));
+
+//Points to the index file of the routes folder, to guide to all routes.
+app.use(require('./routes'));
 
 
 
