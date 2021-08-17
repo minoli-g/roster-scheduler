@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+const UserController = require('../controllers/UserController');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,6 +10,12 @@ router.get('/', function(req, res, next) {
 });
 
 //add any more routes that must be used by all eg- login, logout
+//GET routes
+router.get('/login', UserController.loginPage);
+
+
+//POST routes
+router.post('/login',UserController.login);
 
 //specific model routes go in that model's file
 router.use('/example',require('./example'));
