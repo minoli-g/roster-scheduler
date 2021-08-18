@@ -3,6 +3,8 @@ extends layout
 block content
     h1 Login Page
 
+    p=message
+
     form(method="POST", action="/login")
         p Username
             input(type="text", name="username")
