@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
 //GET routes
 router.get('/login', UserController.loginPage);
 router.get('/home', UserController.homePage);
+router.get('/logout', UserController.logout);
 
 
 //POST routes
