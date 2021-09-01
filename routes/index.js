@@ -5,6 +5,7 @@ const ifLoggedIn = require('../middleware/SessionCheck').ifLoggedIn;
 const ifNotLoggedIn = require('../middleware/SessionCheck').ifNotLoggedIn;
 
 const UserController = require('../controllers/UserController');
+const ConsultantController = require('../controllers/ConsultantController');
 
 
 /* GET home page. */
@@ -24,5 +25,7 @@ router.post('/login',ifNotLoggedIn, UserController.login);
 
 //specific model routes go in that model's file
 router.use('/example',require('./example'));
+
+router.use('/consultant',require('./consultant'));
 
 module.exports = router;
