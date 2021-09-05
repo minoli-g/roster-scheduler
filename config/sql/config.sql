@@ -1,5 +1,5 @@
 CREATE TABLE `user` (
-  `user_id` int,
+  `user_id` int not null auto_increment,
   `username` varchar(20),
   `first_name` varchar(20),
   `last_name` varchar(20),
@@ -12,9 +12,11 @@ CREATE TABLE `user` (
 ALTER TABLE `user` AUTO_INCREMENT = 100;
 
 CREATE TABLE `ward` (
-  `ward_id` int,
+  `ward_id` int not null auto_increment,
   `ward_name` varchar(20),
   `consultant_id` int,
+  `start_month` int,
+  `start_year` int,
   `min_docs` int,
   `morning_start` time,
   `day_start` time,
@@ -35,7 +37,7 @@ CREATE TABLE `doctor` (
 );
 
 CREATE TABLE `registration` (
-  `req_id` int,
+  `req_id` int not null auto_increment,
   `username` varchar(20),
   `first_name` varchar(20),
   `last_name` varchar(20),
