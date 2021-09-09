@@ -6,9 +6,9 @@ class Consultant{
     static async getWardID(wardName){
         
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const wardID = await query('select ward_id from `ward` where ward_name=?');
+        const wardID = await query('select ward_id from `ward` where ward_name=?',[wardName])[0];
 
-        console.log(wardID);
+        //console.log(wardID);
 
         return wardID;
     }
@@ -16,16 +16,44 @@ class Consultant{
     static async getWardInfo(wardID){
 
         //return all ward info in array
+        //TODO - handle no such ward error
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'SELECT * FROM `ward` WHERE `ward_id`=?',[wardID]);
+        
+
+        return result[0];
     }
 
-    static async createWard(wardName, month, year){
+    static async createWard(wardName, consultantID, month, year){
 
         //SQL to insert the ward info
-        //const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        //const wardID = await query('');
-        //check return to see if can get ID from this itself. Else use getWardID and return it. 
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'INSERT INTO `ward` (`ward_id`, `ward_name`, `consultant_id`, `start_month`, `start_year`) VALUES (?,?,?,?,?);',
+            [null,wardName,consultantID,month,year]
+            );
 
-        return 5;
+        //get ward ID from SQL results
+        console.log(result.insertId);
+
+        return result.insertId;
+        
+    }
+
+    static async addDoctor(wardID,doctorID){
+
+        //Check if doctor has a ward
+        //SQL add the doctor- modify doctor's table
+
+    }
+
+    static async editWard(wardID,[params]){
+
+    }
+
+    static async updateLeave(appID,status){
         
     }
 }

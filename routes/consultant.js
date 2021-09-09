@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 router.get('/create',consultantController.createWardPage);
 //router.get('/add',consultantController.addDoctorPage);
 //router.get('/edit')
-//router.get('/ward/:wid',consultantController.wardPage);
+router.get('/ward/:wid',consultantController.wardPage);
 
 //POST routes
 router.post('/create',consultantController.createWard);
