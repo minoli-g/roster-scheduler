@@ -8,7 +8,12 @@ class ConsultantController{
         res.render('consultant/create');
     }
 
-    static addDoctorPage(req,res){}
+    static async addDoctorPage(req,res){
+
+        var wardID = req.params.wid;
+        const info = await Consultant.getWardInfo(wardID);
+        res.render('consultant/add',{wardName: info.ward_name, wardId: wardID}); 
+    }
     
     static changeParamsPage(req,res){}
 
@@ -16,10 +21,8 @@ class ConsultantController{
 
     static async wardPage(req,res){
 
-        var wardID = req.params.wid;
-        
+        var wardID = req.params.wid;        
         const info = await Consultant.getWardInfo(wardID);
-
         res.render('consultant/ward',{wardName: info.ward_name})  //TODO - add the rest of the info
     }
 
@@ -53,6 +56,19 @@ class ConsultantController{
 
         //res.redirect('/');
         
+    }
+
+    static async addDoctor(req,res){
+
+        if (await Consultant.addDoctor(req.body.wardId,req.body.docId)){
+            //success, show ward page
+            res.redirect(`/consultant/ward/${req.body.wardId}`);
+        }
+        else{
+            //show error
+            console.log("error");
+            res.redirect(`add/${req.body.wardId}`);
+        }
     }
 
 }

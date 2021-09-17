@@ -10,15 +10,15 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resouurce');
 });
 
-//router.get('/page',consultantController.page);
 
 //GET routes
 router.get('/create',ifLoggedIn, isConsultant, consultantController.createWardPage);
-//router.get('/add',consultantController.addDoctorPage);
+router.get('/add/:wid',consultantController.addDoctorPage);
 //router.get('/edit')
 router.get('/ward/:wid',ifLoggedIn, isConsultant,consultantController.wardPage);
 
 //POST routes
 router.post('/create',ifLoggedIn, isConsultant,consultantController.createWard);
+router.post('/add',consultantController.addDoctor);
 
 module.exports = router;

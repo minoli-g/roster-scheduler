@@ -70,3 +70,13 @@ CREATE TABLE `issue` (
   `status` binary,
   FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`user_id`)
 );
+
+CREATE TABLE `preferences` (
+  `doctor_id` int,
+  `date1` date,
+  `date2` date,
+  `date3` date,
+  `date4` date,
+  `date5` date,
+  FOREIGN KEY (`doctor_id`) REFERENCES `doctor`(`user_id`)
+);
