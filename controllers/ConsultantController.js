@@ -14,8 +14,6 @@ class ConsultantController{
         const info = await Consultant.getWardInfo(wardID);
         res.render('consultant/add',{wardName: info.ward_name, wardId: wardID}); 
     }
-    
-    static changeParamsPage(req,res){}
 
     static leaveAppPage(req,res){}
 
@@ -23,7 +21,24 @@ class ConsultantController{
 
         var wardID = req.params.wid;        
         const info = await Consultant.getWardInfo(wardID);
-        res.render('consultant/ward',{wardName: info.ward_name})  //TODO - add the rest of the info
+        res.render('consultant/ward',{wardName: info.ward_name,
+                                      min_docs: info.min_docs,
+                                      morning_start: info.morning_start,
+                                      day_start: info.day_start,
+                                      night_start: info.night_start});
+    }
+
+    static async changeParamsPage(req,res){
+
+        var wardID = req.params.wid;
+        const info = await Consultant.getWardInfo(wardID);
+        res.render('consultant/edit',{wardName: info.ward_name,
+                                    wardId: wardID,
+                                    min_docs: info.min_docs,
+                                    morning_start: info.morning_start,
+                                    day_start: info.day_start,
+                                    night_start: info.night_start}); 
+        
     }
 
     static async createWard(req,res){
@@ -69,6 +84,16 @@ class ConsultantController{
             console.log("error");
             res.redirect(`add/${req.body.wardId}`);
         }
+    }
+
+    static async editParams(req,res){
+
+        Consultant.editWard(req.body.wardId,
+                            req.body.min_docs,
+                            req.body.morning_start,
+                            req.body.day_start,
+                            req.body.night_start);
+        res.redirect(`/consultant/ward/${req.body.wardId}`);
     }
 
 }

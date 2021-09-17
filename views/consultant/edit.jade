@@ -1,0 +1,34 @@
+extends ../layout 
+
+block content
+    h1 Ward
+    h1=wardName
+
+    p=message
+
+    h2 Ward Parameters
+    br 
+
+    form(method="POST", action="/consultant/edit")
+
+        input(type="hidden", name="wardId", value=wardId)
+        
+        p Minimum number of doctors: 
+            input(type="number" name="min_docs" value=min_docs)
+            br
+
+        p Morning shift start time 
+            input(type="time" name="morning_start" value=morning_start)
+            br
+
+        p Day shift start time 
+            input(type="time" name="day_start" value=day_start)
+            br 
+
+        p Night shift start time 
+            input(type="time" name="night_start" value=night_start)
+            br 
+
+        button(type="submit") Go
+
+    

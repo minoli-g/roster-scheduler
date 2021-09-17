@@ -66,7 +66,14 @@ class Consultant{
 
     }
 
-    static async editWard(wardID,[params]){
+    static async editWard(wardID,min_docs,morning_start,day_start,night_start){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const edited = await query(
+            'UPDATE `ward` SET `min_docs`=?,`morning_start`=?,`day_start`=?,`night_start`=? WHERE `ward_id`=?',
+            [min_docs,morning_start,day_start,night_start,wardID]
+        );
+        //console.log(edited);
 
     }
 
