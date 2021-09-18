@@ -13,13 +13,13 @@ router.get('/', function(req, res, next) {
 
 //GET routes
 router.get('/create',ifLoggedIn, isConsultant, consultantController.createWardPage);
-router.get('/add/:wid',consultantController.addDoctorPage);
-router.get('/edit/:wid',consultantController.changeParamsPage);
+router.get('/add/:wid',ifLoggedIn, isConsultant, consultantController.addDoctorPage);
+router.get('/edit/:wid',ifLoggedIn, isConsultant, consultantController.changeParamsPage);
 router.get('/ward/:wid',ifLoggedIn, isConsultant,consultantController.wardPage);
 
 //POST routes
 router.post('/create',ifLoggedIn, isConsultant,consultantController.createWard);
-router.post('/add',consultantController.addDoctor);
-router.post('/edit',consultantController.editParams);
+router.post('/add',ifLoggedIn, isConsultant, consultantController.addDoctor);
+router.post('/edit',ifLoggedIn, isConsultant, consultantController.editParams);
 
 module.exports = router;
