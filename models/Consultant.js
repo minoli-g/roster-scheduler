@@ -6,9 +6,13 @@ class Consultant{
     static async getWardID(wardName){
         
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const wardID = await query('select ward_id from `ward` where ward_name=?',[wardName])[0];
+        var wardID = await query('select `ward_id` from `ward` where ward_name=?',[wardName]);
 
-        //console.log(wardID);
+        if (wardID.length==0){ 
+            return false;
+        }
+        
+        wardID = wardID[0].ward_id; 
 
         return wardID;
     }

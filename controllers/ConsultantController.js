@@ -43,10 +43,15 @@ class ConsultantController{
 
     static async createWard(req,res){
         //check if ward name and start month valid
+        //console.log(await Consultant.getWardID('ICU'));
 
-        if (!(await Consultant.getWardID(req.body.wardname)===undefined)) {
+        const wardID = await Consultant.getWardID(req.body.wardname);
+        console.log(wardID);
+
+        if (wardID){
             //throw error saying ward name taken
             console.log("That name's taken");
+            res.render('consultant/create',{message: "That name's taken"});
             return;
         }
 
@@ -55,6 +60,7 @@ class ConsultantController{
 
         if (!(startMonth>new Date())){
             console.log("Invalid Month");
+            res.render('consultant/create',{message: "Invalid start month"});
             return;
         }
 
