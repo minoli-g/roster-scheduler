@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var consultantController = require('../controllers/consultantController');
+var consultantValidator = require('../controllers/validators/consultant');
+
 
 const ifLoggedIn = require('../middleware/SessionCheck').ifLoggedIn;
 const isConsultant = require('../middleware/SessionCheck').isConsultant;
@@ -18,7 +20,7 @@ router.get('/edit/:wid',ifLoggedIn, isConsultant, consultantController.changePar
 router.get('/ward/:wid',ifLoggedIn, isConsultant,consultantController.wardPage);
 
 //POST routes
-router.post('/create',ifLoggedIn, isConsultant,consultantController.createWard);
+router.post('/create',ifLoggedIn, isConsultant,consultantValidator.checkCreateWard(), consultantController.createWard);
 router.post('/add',ifLoggedIn, isConsultant, consultantController.addDoctor);
 router.post('/edit',ifLoggedIn, isConsultant, consultantController.editParams);
 

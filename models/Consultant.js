@@ -20,13 +20,14 @@ class Consultant{
     static async getWardInfo(wardID){
 
         //return all ward info in array
-        //TODO - handle no such ward error
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
             'SELECT * FROM `ward` WHERE `ward_id`=?',[wardID]);
-        
-
+        console.log(result);
+        if(result.length==0){
+            return false;
+        }
         return result[0];
     }
 
@@ -46,8 +47,33 @@ class Consultant{
         
     }
 
-    static async addDoctor(wardID,doctorID){
+    static async doctorExists(doctorID){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const doc_exists = await query('SELECT `username` FROM `user` WHERE `user_id`=?',[doctorID]);
 
+        if(doc_exists.length==0){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    static async doctorHasWard(doctorID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const doc_has_ward = await query('SELECT `ward_id` FROM `doctor` WHERE `user_id`=?',[doctorID]);
+
+        if(doc_has_ward.length==0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    static async addDoctor(wardID,doctorID){
+        /*
         //Check if doctor exists and has a ward
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const doc_exists = await query('SELECT `username` FROM `user` WHERE `user_id`=?',[doctorID]);
@@ -67,6 +93,13 @@ class Consultant{
         else {
             return false;
         }
+        */
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const added = await query(
+            'INSERT INTO `doctor` (`user_id`,`ward_id`) VALUES (?,?)', [doctorID,wardID]
+        );
+        console.log(added);
 
     }
 
