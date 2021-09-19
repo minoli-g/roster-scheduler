@@ -48,7 +48,7 @@ class Consultant{
 
     static async addDoctor(wardID,doctorID){
 
-        //Check if doctor has a ward
+        //Check if doctor exists and has a ward
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const doc_exists = await query('SELECT `username` FROM `user` WHERE `user_id`=?',[doctorID]);
         const doc_has_ward = await query('SELECT `ward_id` FROM `doctor` WHERE `user_id`=?',[doctorID]);
