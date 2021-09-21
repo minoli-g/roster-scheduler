@@ -18,10 +18,14 @@ router.get('/create',ifLoggedIn, isConsultant, consultantController.createWardPa
 router.get('/add/:wid',ifLoggedIn, isConsultant, consultantController.addDoctorPage);
 router.get('/edit/:wid',ifLoggedIn, isConsultant, consultantController.changeParamsPage);
 router.get('/ward/:wid',ifLoggedIn, isConsultant,consultantController.wardPage);
+router.get('/reports',ifLoggedIn,isConsultant, consultantController.reportMsgPage);
+//router.get('/leaves',ifLoggedIn,isConsultant, consultantController.leaveAppPage);
 
 //POST routes
 router.post('/create',ifLoggedIn, isConsultant,consultantValidator.checkCreateWard(), consultantController.createWard);
-router.post('/add',ifLoggedIn, isConsultant, consultantController.addDoctor);
-router.post('/edit',ifLoggedIn, isConsultant, consultantController.editParams);
+router.post('/add',ifLoggedIn, isConsultant,consultantController.addDoctor);
+router.post('/edit',ifLoggedIn, isConsultant, consultantValidator.checkEditParams(), consultantController.editParams);
+router.post('/reports',ifLoggedIn,isConsultant, consultantController.resolveIssue);
+//router.post('/leaves',ifLoggedIn,isConsultant, consultantController.updateLeave);
 
 module.exports = router;

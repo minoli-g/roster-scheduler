@@ -11,21 +11,33 @@ class ConsultantController{
 
     static async addDoctorPage(req,res){
 
-        //change this to display list of all doctors without wards, and hide their IDs.
+        const docs = await Consultant.docsWithoutWards();
 
         var wardID = req.params.wid;
         const info = await Consultant.getWardInfo(wardID);
         if(info){
-        res.render('consultant/add',{wardName: info.ward_name, wardId: wardID}); 
+        res.render('consultant/add',{wardName: info.ward_name, wardId: wardID,
+                                    doctors: docs}); 
         }
         else{
             res.redirect('/home');
         }
     }
 
-    static leaveAppPage(req,res){}
+    static async leaveAppPage(req,res){
 
-    static reportMsgPage(req,res){}
+        const consultantID = req.session.user.id;
+        const leaves = await Consultant.getLeaveApps(consultantID);
+        res.render('consultant/leaves',{applications: leaves});
+    }
+
+    static async reportMsgPage(req,res){
+
+        const consultantID = req.session.user.id;
+        const reports = await Consultant.getReports(consultantID);
+        res.render('reports',{messages: reports});
+
+    }
 
     static async wardPage(req,res){
 
@@ -65,7 +77,6 @@ class ConsultantController{
         //check if ward name and start month valid
 
         const error = validationResult(req);
-
         if(!error.isEmpty()){
             res.render('consultant/create', {message:error.errors[0].msg});
             return;
@@ -75,18 +86,7 @@ class ConsultantController{
         console.log(wardID);
 
         if (wardID){
-            //throw error saying ward name taken
-            console.log("That name's taken");
             res.render('consultant/create',{message: "That name's taken"});
-            return;
-        }
-
-        //compare current date with month given
-        const startMonth = new Date(req.body.startmonth);
-
-        if (!(startMonth>new Date())){
-            console.log("Invalid Month");
-            res.render('consultant/create',{message: "Invalid start month"});
             return;
         }
 
@@ -97,52 +97,50 @@ class ConsultantController{
         const insertWard = await 
         Consultant.createWard(req.body.wardname,userId,startMonth.getMonth(),startMonth.getFullYear());
 
-
-        //redirect to that ward's page
         res.redirect(`/consultant/ward/${insertWard}`);
         return;
-
-        //res.redirect('/');
         
     }
 
     static async addDoctor(req,res){
-        /*
-        if (await Consultant.addDoctor(req.body.wardId,req.body.docId)){
-            //success, show ward page
-            res.redirect(`/consultant/ward/${req.body.wardId}`);
-        }
-        else{
-            //show error
-            console.log("error");
-            res.redirect(`add/${req.body.wardId}`);
-        }
-        */
-       const doctorID = req.body.docId;
+
+      
        const wardID = req.body.wardId;
+       var IDs = Object.keys(req.body);
+       IDs = IDs.slice(0,IDs.length-1);
 
-       const ward_info = await Consultant.getWardInfo(wardID);
+        for (let x in IDs){
+            Consultant.addDoctor(wardID,IDs[x]);
+        }
 
-       if(ward_info){
-
-            if (!await Consultant.doctorExists(doctorID)){
-                res.render('consultant/add',{wardName: ward_info.ward_name, wardId: wardID, 
-                    message: "Doctor ID invalid"});
-            }
-            if(await Consultant.doctorHasWard(doctorID)){
-                res.render('consultant/add',{wardName: ward_info.ward_name, wardId: wardID, 
-                    message: "Doctor has been assigned to a ward"});
-            }
-
-            Consultant.addDoctor(wardID,doctorID);
-            res.redirect(`/consultant/ward/${req.body.wardId}`);
-
-       }
-
-        
+       console.log(IDs);
+       res.redirect(`/consultant/ward/${wardID}`);
+       return;
     }
 
+
     static async editParams(req,res){
+
+        const error = validationResult(req);
+        if(!error.isEmpty()){
+            //reload the edit page showing error message
+
+            if(req.body.wardId){
+                const info = await Consultant.getWardInfo(req.body.wardId);
+                if (info) {
+                res.render('consultant/edit',{wardName: info.ward_name,
+                                    wardId: req.body.wardId,
+                                    min_docs: info.min_docs,
+                                    morning_start: info.morning_start,
+                                    day_start: info.day_start,
+                                    night_start: info.night_start,
+                                    message:error.errors[0].msg});
+                return;
+                }
+            }
+            res.redirect('/home');
+            return;
+        }
 
         Consultant.editWard(req.body.wardId,
                             req.body.min_docs,
@@ -152,6 +150,21 @@ class ConsultantController{
         res.redirect(`/consultant/ward/${req.body.wardId}`);
     }
 
+    static async resolveIssue(req,res){
+
+        const issueID = req.body.issueID;
+        const done = await Consultant.markReport(issueID);
+        res.redirect('/consultant/reports');
+        return;
+    }
+
+    static async updateLeave(req,res){
+
+        const leaveID = req.body.leaveID;
+        const update = await Consultant.updateLeave(leaveID);
+        res.redirect('/consultant/leaves');
+        return;
+    }
 }
 
 module.exports = ConsultantController;
