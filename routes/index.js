@@ -5,7 +5,7 @@ const ifLoggedIn = require('../middleware/SessionCheck').ifLoggedIn;
 const ifNotLoggedIn = require('../middleware/SessionCheck').ifNotLoggedIn;
 
 const UserController = require('../controllers/UserController');
-const ConsultantController = require('../controllers/ConsultantController');
+const userValidator = require('../controllers/validators/user');
 
 
 /* GET home page. */
@@ -18,10 +18,12 @@ router.get('/', function(req, res, next) {
 router.get('/login', ifNotLoggedIn, UserController.loginPage);
 router.get('/home', ifLoggedIn, UserController.homePage);
 router.get('/logout', ifLoggedIn, UserController.logout);
+router.get('/signup',ifNotLoggedIn, UserController.signupPage);
 
 
 //POST routes
 router.post('/login',ifNotLoggedIn, UserController.login);
+router.post('/signup',ifNotLoggedIn, userValidator.registrationReq(),UserController.signup);
 
 //specific model routes go in that model's file
 router.use('/example',require('./example'));

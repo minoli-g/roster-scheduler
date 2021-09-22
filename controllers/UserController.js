@@ -2,6 +2,8 @@ bcrypt = require('bcrypt');
 
 user = require('../models/User');
 
+const { body, validationResult } = require('express-validator');
+
 class UserController{
     
     static loginPage(req,res){
@@ -10,6 +12,29 @@ class UserController{
 
     static homePage(req,res){
         res.render('home', {username: req.session.user.username});
+    }
+
+    static signupPage(req,res){
+        res.render('signup');
+    }
+
+    static async signup(req,res){
+
+        const error = validationResult(req);
+        if(!error.isEmpty()){
+            res.render('signup',{message:error.errors[0].msg});
+        }
+
+        const password = await bcrypt.hash(req.body.pwd1,10);
+
+        //console.log(await bcrypt.compare(req.body.pwd1,password));
+
+        user.submitRegReq(req.body.first_name,
+                        req.body.last_name,
+                        req.body.username,
+                        req.body.type,
+                        password);
+        res.redirect('/');
     }
 
     static async login(req,res){
