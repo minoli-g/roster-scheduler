@@ -12,6 +12,16 @@ class User{
         return info;
     }
 
+    static async checkRegReq(username){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const info = await query('select * from `registration` where username=?',[username]);
+
+        return info;
+
+        
+    }
+
     static async submitRegReq(first_name, last_name, username, type, pwd){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);

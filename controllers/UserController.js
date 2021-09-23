@@ -29,12 +29,25 @@ class UserController{
 
         //console.log(await bcrypt.compare(req.body.pwd1,password));
 
+        var user_info = await user.getUserByUsername(req.body.username);
+        user_info = user_info[0];
+
+        var regReq = await user.checkRegReq(req.body.username);
+        regReq = regReq[0];
+
+        if (user_info || regReq) {
+            //throw error saying no such username
+            res.render('signup',{message: "Sorry, that username is taken"});
+            return;
+        }
+
         user.submitRegReq(req.body.first_name,
                         req.body.last_name,
                         req.body.username,
                         req.body.type,
                         password);
         res.redirect('/');
+        return;
     }
 
     static async login(req,res){
@@ -47,6 +60,14 @@ class UserController{
         user_info = user_info[0];
 
         if (!user_info) {
+
+            var regReq = await user.checkRegReq(req.body.username);
+            regReq = regReq[0];
+
+            if(regReq) {
+                res.render('login',{message: "Sorry, your request is still pending"});
+                return;
+            }
             //throw error saying no such username
             res.render('login',{message: "This user does not exist"});
             return;
