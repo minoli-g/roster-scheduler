@@ -1,0 +1,17 @@
+extends ../layout 
+
+block content
+    h1 Create New Ward
+
+    p=message
+
+    form(method="POST", action="/consultant/create")
+        p Ward Name (Must be Unique)
+            input(type="text", name="wardname")
+            br
+
+        p Start Month 
+            input(type="month", name="startmonth")
+            br
+        
+        button(type="submit") Go

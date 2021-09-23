@@ -1,0 +1,35 @@
+extends layout 
+
+block content
+    h1 Send a registration request 
+    p=message
+
+    form(method="POST" action="/signup")
+
+        label(for="first_name") First Name
+        input(type="text" name="first_name")
+        br
+
+        label(for="last_name") Last Name
+        input(type="text" name="last_name")
+        br
+
+        label(for="username") Choose an Username
+        input(type="text" name="username")
+        br
+
+        label(for="type") Doctor or Consultant?
+        select(name="type")
+            option(value="doctor") Doctor
+            option(value="consultant") Consultant
+        br
+
+        label(for="pwd1") Password
+        input(type="password" name="pwd1")
+        br
+
+        label(for="pwd2") Re-enter Password
+        input(type="password" name="pwd2")
+        br
+
+        button(type="submit") Submit

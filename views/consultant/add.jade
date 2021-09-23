@@ -1,0 +1,18 @@
+extends ../layout 
+
+block content
+    h1 Add doctor to Ward
+    h1=wardName
+    p=message
+
+
+    form(method="POST", action="/consultant/add")
+        p Available Doctors 
+            for doctor in doctors
+                br
+                input(type="checkbox", name=doctor.user_id)
+                label(for=doctor.user_id)=doctor.first_name+' '+doctor.last_name
+
+        input(type="hidden", name="wardId", value=wardId)
+
+        button(type="submit") Go
