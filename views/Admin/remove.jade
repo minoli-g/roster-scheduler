@@ -1,0 +1,17 @@
+extends ../layout 
+
+block content
+    h1 Remove doctor from Ward
+    h1=wardName
+
+    p=message
+
+    form(method="POST", action="/admin/remove")
+        p Doctor ID
+            input(type="text", name="docId")
+            br
+
+        input(type="hidden", name="wardId", value=wardId)
+
+        
+        button(type="submit") Go
