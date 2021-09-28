@@ -1,24 +1,25 @@
 extends ../layout 
 
 block content
-    h1 Ward
-    h1=wardName
+    div(class="container-fluid py-4")
+        div(class="jumbotron text-center")
+            h1 Ward: #{wardName}
 
-    p=message
+            p=message
 
-    h2 Ward Parameters
-    br 
+            h2 Ward Parameters
+            br 
 
-    p Minimum number of doctors: 
-    p=min_docs 
+            p Minimum number of doctors: 
+            p=min_docs 
 
-    p Morning shift start time 
-    p=morning_start 
+            p Morning shift start time 
+            p=morning_start 
 
-    p Day shift start time 
-    p=day_start 
+            p Day shift start time 
+            p=day_start 
 
-    p Night shift start time 
-    p=night_start 
+            p Night shift start time 
+            p=night_start 
 
     

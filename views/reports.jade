@@ -3,12 +3,17 @@ extends layout
 block content
     h3 Report messages
 
-    ul
-        for item in messages
-            li
-                form(method="POST", action="/consultant/reports")
-                    p='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
-                    br
-                    p=item.message 
-                    input(type="hidden", name="issueID", value=item.issue_id)
-                    button(type="submit") Mark As Resolved
+    if(!messages)
+        div(class="alert alert-danger") No reports at the moment 
+
+    else
+
+        ul
+            for item in messages
+                li
+                    form(method="POST", action="/consultant/reports")
+                        p='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
+                        br
+                        p=item.message 
+                        input(type="hidden", name="issueID", value=item.issue_id)
+                        button(type="submit") Mark As Resolved
