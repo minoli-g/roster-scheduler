@@ -1,19 +1,27 @@
 extends layout 
 
 block content
-    h3 Report messages
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            h3 Report messages from Doctors in your wards
+            br
+            
+            if(messages.length==0)
+                div(class="alert alert-danger") 
+                    p No reports at the moment 
 
-    if(!messages)
-        div(class="alert alert-danger") No reports at the moment 
+            else
 
-    else
-
-        ul
-            for item in messages
-                li
-                    form(method="POST", action="/consultant/reports")
-                        p='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
-                        br
-                        p=item.message 
-                        input(type="hidden", name="issueID", value=item.issue_id)
-                        button(type="submit") Mark As Resolved
+                ul
+                    div(class="row")
+                        for item in messages
+                            br
+                            div(class="col-6 card py-4")
+                                form(method="POST", action="/consultant/reports")
+                                    em='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
+                                    br
+                                    p=item.message
+                                    input(type="hidden", name="issueID", value=item.issue_id)
+                                    button(type="submit" class="btn btn-info") Mark As Resolved
+                                    
+                                

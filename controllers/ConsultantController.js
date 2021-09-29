@@ -44,7 +44,8 @@ class ConsultantController{
         var wardID = req.params.wid;        
         const info = await Consultant.getWardInfo(wardID);
         if (info) {
-        res.render('consultant/ward',{wardName: info.ward_name,
+        res.render('consultant/ward',{wardID: wardID,
+                                      wardName: info.ward_name,
                                       min_docs: info.min_docs,
                                       morning_start: info.morning_start,
                                       day_start: info.day_start,
