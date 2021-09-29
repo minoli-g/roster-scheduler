@@ -22,8 +22,8 @@ class UserController{
                 break;
 
             case("doctor"):
-            res.render('home', {username: req.session.user.username});
-            break;
+                res.render('home', {username: req.session.user.username});
+                break;
             
         }
         //res.render('home', {username: req.session.user.username});
