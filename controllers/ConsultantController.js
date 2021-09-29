@@ -44,7 +44,8 @@ class ConsultantController{
         var wardID = req.params.wid;        
         const info = await Consultant.getWardInfo(wardID);
         if (info) {
-        res.render('consultant/ward',{wardName: info.ward_name,
+        res.render('consultant/ward',{wardID: wardID,
+                                      wardName: info.ward_name,
                                       min_docs: info.min_docs,
                                       morning_start: info.morning_start,
                                       day_start: info.day_start,
@@ -93,6 +94,7 @@ class ConsultantController{
         //insert ward info into DB table and get ID of the ward
 
         const userId = req.session.user.id;
+        const startMonth = new Date(req.body.startmonth);
 
         const insertWard = await 
         Consultant.createWard(req.body.wardname,userId,startMonth.getMonth(),startMonth.getFullYear());

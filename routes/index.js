@@ -9,7 +9,7 @@ const userValidator = require('../controllers/validators/user');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', ifNotLoggedIn, function(req, res, next) {
   res.render('index', { title: 'Express - Roster Scheduler Home Page' });
 });
 
