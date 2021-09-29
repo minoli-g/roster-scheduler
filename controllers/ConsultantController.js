@@ -94,6 +94,7 @@ class ConsultantController{
         //insert ward info into DB table and get ID of the ward
 
         const userId = req.session.user.id;
+        const startMonth = new Date(req.body.startmonth);
 
         const insertWard = await 
         Consultant.createWard(req.body.wardname,userId,startMonth.getMonth(),startMonth.getFullYear());
