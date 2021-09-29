@@ -12,6 +12,7 @@ class UserController{
 
     static homePage(req,res){
         switch(req.session.user.type){
+            
             case("consultant"):
                 res.render('consultant/dash',{user_info:req.session.user});
                 break;
@@ -24,9 +25,9 @@ class UserController{
                 res.render('home', {username: req.session.user.username});
                 break;
             
-            }
-            //res.render('home', {username: req.session.user.username});
-            return;
+        }
+        //res.render('home', {username: req.session.user.username});
+        return;
     }
 
     static signupPage(req,res){
