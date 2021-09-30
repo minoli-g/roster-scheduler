@@ -2,6 +2,8 @@ bcrypt = require('bcrypt');
 
 user = require('../models/User');
 
+const { body, validationResult } = require('express-validator');
+
 class UserController{
     
     static loginPage(req,res){
@@ -9,7 +11,61 @@ class UserController{
     }
 
     static homePage(req,res){
-        res.render('home', {username: req.session.user.username});
+        switch(req.session.user.type){
+            
+            case("consultant"):
+                res.render('consultant/dash',{user_info:req.session.user});
+                break;
+            
+            case("admin"):
+                res.render('admin/dashboard', {username: req.session.user.username});
+                break;
+            
+            case("doctor"):
+                res.render('home', {username: req.session.user.username});
+                break;
+            
+        }
+        //res.render('home', {username: req.session.user.username});
+        return;
+    }
+
+    static signupPage(req,res){
+        res.render('signup');
+    }
+
+    static async signup(req,res){
+
+        const error = validationResult(req);
+        if(!error.isEmpty()){
+            res.render('signup',{message:error.errors[0].msg});
+            return;
+        }
+
+        const password = await bcrypt.hash(req.body.pwd1,10);
+
+        //console.log(await bcrypt.compare(req.body.pwd1,password));
+
+        var user_info = await user.getUserByUsername(req.body.username);
+        user_info = user_info[0];
+
+        var regReq = await user.checkRegReq(req.body.username);
+        regReq = regReq[0];
+
+        if (user_info || regReq) {
+            //throw error saying no such username
+            res.render('signup',{message: "Sorry, that username is taken"});
+            return;
+        }
+
+        user.submitRegReq(req.body.first_name,
+                        req.body.last_name,
+                        req.body.username,
+                        req.body.type,
+                        password);
+        //res.redirect('/');
+        res.render('index',{message:"Your registration request has been recorded. A staff member will inform you when it is approved."})
+        return;
     }
 
     static async login(req,res){
@@ -22,6 +78,14 @@ class UserController{
         user_info = user_info[0];
 
         if (!user_info) {
+
+            var regReq = await user.checkRegReq(req.body.username);
+            regReq = regReq[0];
+
+            if(regReq) {
+                res.render('login',{message: "Sorry, your registration request is still pending"});
+                return;
+            }
             //throw error saying no such username
             res.render('login',{message: "This user does not exist"});
             return;
