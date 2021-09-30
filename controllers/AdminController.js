@@ -21,20 +21,6 @@ class AdminController{
         }
     }
 
-
-    // static async addDoctor(req,res){
-
-    //     if (await Admin.addDoctor(req.body.wardId,req.body.docId)){
-    //         //success, show ward page
-    //         res.redirect(`/admin/ward/${req.body.wardId}`);
-    //     }
-    //     else{
-    //         //show error
-    //         console.log("error");
-    //         res.redirect(`add/${req.body.wardId}`);
-    //     }
-    // }
-
     static async addDoctor(req,res){
 
         const wardID = req.body.wardId;
@@ -44,31 +30,21 @@ class AdminController{
          for (let x in IDs){
             Admin.addDoctorToWard(wardID,IDs[x]);
          }
- 
-        console.log(IDs);
+
         res.redirect(`/admin/ward/${wardID}`);
         return;
      }
 
-    static async removeDoctorPage(req,res){
-
-        var wardID = req.params.wid;
-        const info = await Admin.getWardInfo(wardID);
-        res.render('Admin/remove',{wardName: info.ward_name, wardId: wardID}); 
-    }
-
     static async removeDoctor(req,res){
 
-        if (await Admin.addDoctor(req.body.wardId,req.body.docId)){
-            //success, show ward page
-            res.redirect(`/admin/ward/${req.body.wardId}`);
-        }
-        else{
-            //show error
-            console.log("error");
-            res.redirect(`add/${req.body.wardId}`);
-        }
+        const ward = req.body.wid;
+        const doctorID = req.body.doctorID;
+        console.log(ward);
+        const done = await Admin.removeDoctorFromWard(doctorID);
+        res.redirect(`allwards`);
+        return;
     }
+
     static async allWardsPage(req,res){
 
         const wards = await Admin.getAllWards();

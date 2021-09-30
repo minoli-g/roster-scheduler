@@ -17,7 +17,9 @@ block content
             a(href="/admin/roster/#{wardID}") 
                 h4 View Roster
             br
-
+            
+            input(type="hidden", name="wardId", value=wardId)
+            
             div(class="row")
                 div(class="col-md-6")
                     div(class="card rounded shadow-lg")
@@ -41,7 +43,8 @@ block content
                                 a(href="/admin/add/#{wardID}") (Add More)
 
                             for doc in docs
-                                form(method="POST", action="/admin/remove/#{wardID}") 
-                                em= doc.first_name+' '+doc.last_name
-                                &emsp;
-                                button(type="submit" class="btn btn-info") Remove
+                                form(method="POST", action="/admin/remove") 
+                                    em= doc.first_name+' '+doc.last_name
+                                    //- &emsp; 
+                                    input(type="hidden", name="doctorID", value=doc.user_id)
+                                    button(type="submit" class="btn btn-info") Remove
