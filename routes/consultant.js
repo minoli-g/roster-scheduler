@@ -19,7 +19,9 @@ router.get('/add/:wid',ifLoggedIn, isConsultant, consultantController.addDoctorP
 router.get('/edit/:wid',ifLoggedIn, isConsultant, consultantController.changeParamsPage);
 router.get('/ward/:wid',ifLoggedIn, isConsultant,consultantController.wardPage);
 router.get('/reports',ifLoggedIn,isConsultant, consultantController.reportMsgPage);
-//router.get('/leaves',ifLoggedIn,isConsultant, consultantController.leaveAppPage);
+router.get('/wards',ifLoggedIn, isConsultant, consultantController.allWardsPage);
+router.get('/leaves',ifLoggedIn, isConsultant, consultantController.leaveAppPage);
+router.get('/roster/:wid',ifLoggedIn, isConsultant, consultantController.rosterPage);
 
 //POST routes
 router.post('/create',ifLoggedIn, isConsultant,consultantValidator.checkCreateWard(), consultantController.createWard);

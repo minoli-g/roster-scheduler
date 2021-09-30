@@ -1,7 +1,5 @@
 const Consultant = require('../models/Consultant');
-const { body, validationResult } = require('express-validator');
-
-//Use input validation for ward creation, parameter setting.
+const { body, validationResult } = require('express-validator');  //Use input validation for ward creation, parameter setting.
 
 class ConsultantController{
 
@@ -12,9 +10,11 @@ class ConsultantController{
     static async addDoctorPage(req,res){
 
         const docs = await Consultant.docsWithoutWards();
+        const consultantID = req.session.user.id;
 
         var wardID = req.params.wid;
-        const info = await Consultant.getWardInfo(wardID);
+        const info = await Consultant.getWardOfConsultant(wardID,consultantID);
+
         if(info){
         res.render('consultant/add',{wardName: info.ward_name, wardId: wardID,
                                     doctors: docs}); 
@@ -26,9 +26,15 @@ class ConsultantController{
 
     static async leaveAppPage(req,res){
 
-        const consultantID = req.session.user.id;
-        const leaves = await Consultant.getLeaveApps(consultantID);
-        res.render('consultant/leaves',{applications: leaves});
+        //const consultantID = req.session.user.id;
+        //const leaves = await Consultant.getLeaveApps(consultantID);
+        //res.render('consultant/leaves',{applications: leaves});
+        res.render('consultant/leaves');
+
+    }
+
+    static async rosterPage(req,res){
+        res.render('roster',{roster:[]});
     }
 
     static async reportMsgPage(req,res){
@@ -41,10 +47,16 @@ class ConsultantController{
 
     static async wardPage(req,res){
 
-        var wardID = req.params.wid;        
-        const info = await Consultant.getWardInfo(wardID);
+        const wardID = req.params.wid;        
+        const consultantID = req.session.user.id;
+
+        const info = await Consultant.getWardOfConsultant(wardID,consultantID); //ensures that consultant has permission to access this ward
+
         if (info) {
-        res.render('consultant/ward',{wardID: wardID,
+
+            const docs = await Consultant.docsInWard(wardID);
+            res.render('consultant/ward',{wardID: wardID,
+                                      docs: docs,
                                       wardName: info.ward_name,
                                       min_docs: info.min_docs,
                                       morning_start: info.morning_start,
@@ -59,7 +71,9 @@ class ConsultantController{
     static async changeParamsPage(req,res){
 
         var wardID = req.params.wid;
-        const info = await Consultant.getWardInfo(wardID);
+        const consultantID = req.session.user.id;
+
+        const info = await Consultant.getWardOfConsultant(wardID,consultantID);
         if (info) {
         res.render('consultant/edit',{wardName: info.ward_name,
                                     wardId: wardID,
@@ -72,6 +86,15 @@ class ConsultantController{
             res.redirect('/home');
         }
         
+    }
+
+    static async allWardsPage(req,res){
+
+        const consultantID = req.session.user.id;
+        const wards = await Consultant.allWards(consultantID);
+        console.log(wards);
+        res.render('consultant/allwards',{details: wards});
+
     }
 
     static async createWard(req,res){

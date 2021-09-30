@@ -20,8 +20,6 @@ class Consultant{
 
     static async getWardInfo(wardID){
 
-        //return all ward info in array
-
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
             'SELECT * FROM `ward` WHERE `ward_id`=?',[wardID]);
@@ -30,6 +28,27 @@ class Consultant{
             return false;
         }
         return result[0];
+    }
+
+    static async getWardOfConsultant(wardID,consultantID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'SELECT * FROM `ward` WHERE `ward_id`=? and `consultant_id`=?',[wardID,consultantID]);
+        
+        if(result.length==0){
+            return false;
+        }
+        return result[0];
+
+    }
+
+    static async allWards(consultantID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('select ward_id,ward_name from ward where consultant_id=?',[consultantID]);
+
+        return result;
     }
 
     static async createWard(wardName, consultantID, month, year){
@@ -81,6 +100,15 @@ class Consultant{
         //console.log(docs[0].first_name)
         return docs;
 
+    }
+
+    static async docsInWard(wardID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const docs = await query('select user_id, first_name, last_name from user join doctor using (user_id) where ward_id = ?',
+        [wardID]);
+
+        return docs;
     }
 
     static async addDoctor(wardID,doctorID){
