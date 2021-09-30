@@ -34,7 +34,7 @@ class AdminController{
         res.redirect(`/admin/ward/${wardID}`);
         return;
      }
-
+// =============have to look again==============================
     static async removeDoctor(req,res){
 
         const ward = req.body.wid;
