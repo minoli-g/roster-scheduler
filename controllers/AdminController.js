@@ -5,12 +5,21 @@ const Admin = require('../models/AdminModel');
 class AdminController{
 
     static async addDoctorPage(req,res){
-
+        
         var wardID = req.params.wid;
-        const info = await Admin.getWardInfo(wardID);
-        res.render('Admin/add',{wardName: info.ward_name, wardId: wardID}); 
-    }
+        const docs = await Admin.docsWithoutWards();
 
+        
+        const info = await Admin.getWardInfo(wardID);
+
+        if(info){
+        res.render('admin/add',{wardName: info.ward_name, wardId: wardID,
+                                    doctors: docs}); 
+        }
+        else{
+            res.redirect('/home');
+        }
+    }
 
 
     // static async addDoctor(req,res){
@@ -60,14 +69,24 @@ class AdminController{
             res.redirect(`add/${req.body.wardId}`);
         }
     }
+    static async allWardsPage(req,res){
 
+        const wards = await Admin.getAllWards();
+        res.render('admin/allwards',{details: wards});
+
+    }
 
     static async wardPage(req,res){
 
-        var wardID = req.params.wid;        
+        const wardID = req.params.wid;        
         const info = await Admin.getWardInfo(wardID);
+
         if (info) {
-        res.render('admin/ward',{wardName: info.ward_name,
+
+            const docs = await Admin.getWardDoctors(wardID);
+            res.render('admin/ward',{wardID: wardID,
+                                      docs: docs,
+                                      wardName: info.ward_name,
                                       min_docs: info.min_docs,
                                       morning_start: info.morning_start,
                                       day_start: info.day_start,
@@ -78,21 +97,44 @@ class AdminController{
         }
     }
 
-    static async acceptRegistration(req,res){
-        const info = await Admin.viewNewIssues();
-        res.render('admin/issue',{})    
+    static async issuePage(req,res){
 
-
-
-    }
-
-    static async rejectRegistration(req,res){
-
+        const reports = await Admin.viewNewIssues();
+        res.render('admin/issue',{messages: reports});
     }
 
     static async solveDoctorIssue(req,res){
 
+        const issueID = req.body.issueID;
+        const done = await Admin.solveIssues(issueID);
+        res.redirect('issue');
+        return;
     }
+
+    static async newRegPage(req,res){
+
+        const regs = await Admin.viewNewRegistration();
+        res.render('admin/register',{messages: regs});
+    }
+
+    static async solveRegistration(req,res){
+        const reqID = req.body.reqID;
+        const details = await Admin.selectNewRegistration(reqID);
+        const done = await Admin.addNewUser(details.username,details.first_name,details.last_name,details.password,details.type);
+        const del = await Admin.deleteNewRegistration(reqID);
+        res.redirect('register');
+        return;
+
+    }
+
+    static async rejectRegistration(req,res){
+        const reqID = req.body.reqID;
+        const del = await Admin.deleteNewRegistration(reqID);
+        res.redirect('register');
+        return;
+    }
+
+
 
 
 

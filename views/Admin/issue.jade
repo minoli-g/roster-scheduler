@@ -1,6 +1,26 @@
-extends ../layout 
+extends layout 
 
 block content
-    h1 View Doctor Issues
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            h3 Report messages from Doctors in your Hospital
+            br
+            
+            if(messages.length==0)
+                div(class="alert alert-danger") 
+                    p No reports at the moment 
 
-    p=message
+            else
+
+                ul
+                    div(class="row")
+                        for item in messages
+                            br
+                            div(class="col-6 card py-4")
+                                form(method="POST", action="/admin/issue")
+                                    em='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
+                                    br
+                                    p=item.message
+                                    input(type="hidden", name="issueID", value=item.issue_id)
+                                    button(type="submit" class="btn btn-info") Mark As Resolved
+                                    
