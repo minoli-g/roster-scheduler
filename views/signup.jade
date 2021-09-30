@@ -1,35 +1,57 @@
 extends layout 
 
 block content
-    h1 Send a registration request 
-    p=message
 
-    form(method="POST" action="/signup")
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            h1 Sign up for Roster Scheduler
+            em All users are subject to manual verification, so your registration request may take a while to be processed.
+            em Have an account already? &nbsp;
+                a(href="/login") Log In.
+            
+            if(message)
+                br
+                div(class="alert alert-danger") #{message}
+            br
 
-        label(for="first_name") First Name
-        input(type="text" name="first_name")
-        br
+            div(class="card rounded shadow-lg col-6")
+                div(class="card-body text-center")
+                    form(method="POST" action="/signup")
 
-        label(for="last_name") Last Name
-        input(type="text" name="last_name")
-        br
+                        div(class="form-group form-row")
+                            label(for="first_name" class="col-md-6 col-form-label") First Name
+                            input(type="text" name="first_name" , class="col-md-6 form-control")
+                            br
 
-        label(for="username") Choose an Username
-        input(type="text" name="username")
-        br
+                        div(class="form-group form-row")
+                            label(for="last_name" class="col-md-6 col-form-label") Last Name
+                            input(type="text" name="last_name" , class="col-md-6  form-control")
+                            br
 
-        label(for="type") Doctor or Consultant?
-        select(name="type")
-            option(value="doctor") Doctor
-            option(value="consultant") Consultant
-        br
+                        div(class="form-group form-row")
+                            label(for="username" class="col-md-6 col-form-label") Choose an Username
+                            input(type="text" name="username" , class="col-md-6 form-control")
+                            br
 
-        label(for="pwd1") Password
-        input(type="password" name="pwd1")
-        br
+                        div(class="form-group form-row")
+                            label(for="type" class="col-md-6 col-form-label") Doctor or Consultant?
+                                small(class="form-text text-muted") Consultants create and manage wards. Doctors get their shifts scheduled.
+                            div(class="col-md-6")
+                                select(name="type", class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown")
+                                    div(class="dropdown-menu")
+                                        option(value="doctor" class="dropdown-item") Doctor
+                                        option(value="consultant" class="dropdown-item") Consultant
+                                
+                            br
 
-        label(for="pwd2") Re-enter Password
-        input(type="password" name="pwd2")
-        br
+                        div(class="form-group form-row")
+                            label(for="pwd1" class="col-md-6 col-form-label") Password
+                            input(type="password" name="pwd1", class="col-md-6 col-sm-8 form-control")
+                            br
 
-        button(type="submit") Submit
+                        div(class="form-group form-row")
+                            label(for="pwd2" class="col-md-6 col-form-label") Re-enter Password
+                            input(type="password" name="pwd2", class="col-md-6 form-control")
+                            br
+
+                        button(type="submit" class="btn btn-info") Submit

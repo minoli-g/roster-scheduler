@@ -7,6 +7,10 @@ block content
       h1 Welcome to Roster Scheduler v1
       em A smart scheduling utility designed for hospital wards
 
+      if(message)
+        br
+        div(class="alert alert-success") #{message}
+
     div(class="container")
       div(class="row")
         div(class="col-6")

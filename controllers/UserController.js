@@ -39,6 +39,7 @@ class UserController{
         const error = validationResult(req);
         if(!error.isEmpty()){
             res.render('signup',{message:error.errors[0].msg});
+            return;
         }
 
         const password = await bcrypt.hash(req.body.pwd1,10);
@@ -62,7 +63,8 @@ class UserController{
                         req.body.username,
                         req.body.type,
                         password);
-        res.redirect('/');
+        //res.redirect('/');
+        res.render('index',{message:"Your registration request has been recorded. A staff member will inform you when it is approved."})
         return;
     }
 
@@ -81,7 +83,7 @@ class UserController{
             regReq = regReq[0];
 
             if(regReq) {
-                res.render('login',{message: "Sorry, your request is still pending"});
+                res.render('login',{message: "Sorry, your registration request is still pending"});
                 return;
             }
             //throw error saying no such username
