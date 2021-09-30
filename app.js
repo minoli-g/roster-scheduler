@@ -41,6 +41,12 @@ const MySQLStore=require('express-mysql-session')(session);
 const connection = require('./config/db');
 const sessionStore = new MySQLStore({}/* session store options */, connection);
 
+app.use(cors({
+  origin: ["http://localhost:3006"],
+  methods: ["POST","GET"],
+  credentials: true
+}));
+
 app.use(session({
 	key: 'session_cookie_name',
 	secret: 'session_cookie_secret',
@@ -49,6 +55,8 @@ app.use(session({
 	saveUninitialized: true,
   cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
 }));
+
+app.use("/api/", doctorRoutes);
 
 //Points to the index file of the routes folder, to guide to all routes.
 app.use(require('./routes'));
