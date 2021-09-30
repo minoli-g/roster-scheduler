@@ -1,10 +1,27 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const app = express();
 
-var app = express();
+
+const admin = require('./routes/AdminRoute');
+app.use('/', admin);
+
+
+
+
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Listning on port ${port}...`)
+});
+
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -17,13 +34,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
 // setting up session data storage
 const session=require("express-session");
 const MySQLStore=require('express-mysql-session')(session);
 
-var connection = require('./config/db');
-var sessionStore = new MySQLStore({}/* session store options */, connection);
+const connection = require('./config/db');
+const sessionStore = new MySQLStore({}/* session store options */, connection);
 
 app.use(session({
 	key: 'session_cookie_name',
@@ -38,11 +54,10 @@ app.use(session({
 app.use(require('./routes'));
 
 
-
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -55,4 +70,30 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+// Connecting the Database
+connection.connect((err) => {
+  console.log('Mysql Connected...');
+});
+
+
+// app.get('/details', (req, res) => {
+//   let sql = 'SELECT first_name FROM user';
+//   connection.query(sql, (err, result) => {
+//       console.log("Data fetched...");
+//       res.send(result);
+//   });
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// module.exports = app;

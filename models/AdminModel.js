@@ -11,6 +11,14 @@ class Admin {
         return wardID;
     }
 
+    static async getAllWards(){
+        
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const details = await query('SELECT * FROM ward');
+
+        return details;
+    }
+
     static async getWardInfo(wardID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
@@ -23,10 +31,19 @@ class Admin {
     static async getWardDoctors(wardID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query(
-            'SELECT user_id FROM `doctor` WHERE `ward_id`=?',[wardID]);
-        
-        return result;
+        const docs = await query('select user_id, first_name, last_name from user join doctor using (user_id) where ward_id = ?',
+        [wardID]);
+
+        return docs;
+    }
+
+    static async docsWithoutWards(){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const docs = await query('select `user_id`,`first_name`,`last_name` from `user` where `type`="doctor" and `user_id` not in (select `user_id` from `doctor`)');
+
+        return docs;
+
     }
 
     static async getDoctorInfoByID(doctorID){
@@ -51,8 +68,7 @@ class Admin {
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
-            'UPDATE `doctor` SET `ward_id` = null WHERE `user_id` = ?',[doctorID]);
-
+            'DELETE FROM `doctor` WHERE `user_id` = ?',[doctorID]);
         return result;
         
     }
@@ -61,7 +77,7 @@ class Admin {
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
-            'SELECT * FROM `issue` WHERE `status`= 0x00');
+            'select issue_id, first_name, last_name, message, date from issue join user on issue.doctor_id = user.user_id where status = 0x00;');
 
         return result;
         
@@ -73,18 +89,33 @@ class Admin {
         const result = await query(
             'UPDATE `issue` SET `status` = 0x01 WHERE `issue_id` = ?',[issueID]);
 
-        return result; 
+        return; 
     }
 
     static async viewNewRegistration(){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
-            'SELECT * FROM `registration` WHERE `status`= 0');
+            'SELECT * FROM `registration`');
 
         return result; 
     }
+    static async selectNewRegistration(reqID){
 
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'SELECT * FROM `registration` WHERE `req_id` = ?',[reqID]);
+
+        return result[0]; 
+    }
+    static async deleteNewRegistration(reqID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'DELETE FROM registration WHERE `req_id` = ?',[reqID]);
+
+        return; 
+    }
     static async addNewUser(username,first_name,last_name,password,type){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
@@ -94,6 +125,8 @@ class Admin {
         return result;
         
     }
+
+
 }
 
 module.exports = Admin;

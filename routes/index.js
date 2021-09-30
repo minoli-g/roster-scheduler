@@ -6,7 +6,9 @@ const ifNotLoggedIn = require('../middleware/SessionCheck').ifNotLoggedIn;
 
 const UserController = require('../controllers/UserController');
 const userValidator = require('../controllers/validators/user');
-
+const userValidator = require('../controllers/validators/user');
+const ConsultantController = require('../controllers/ConsultantController');
+const AdminController = require('../controllers/AdminController');
 
 /* GET home page. */
 router.get('/', ifNotLoggedIn, function(req, res, next) {
@@ -29,5 +31,7 @@ router.post('/signup',ifNotLoggedIn, userValidator.registrationReq(),UserControl
 router.use('/example',require('./example'));
 
 router.use('/consultant',require('./consultant'));
+router.use('/admin',require('./AdminRoute'));
+
 
 module.exports = router;
