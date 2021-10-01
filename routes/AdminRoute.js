@@ -6,25 +6,26 @@ const ifLoggedIn = require('../middleware/SessionCheck').ifLoggedIn;
 const isAdmin = require('../middleware/SessionCheck').isAdmin;
 
 /* GET localhost/example page */
-router.get('/home', function(req, res, next) {
+router.get('/', function(req, res, next) {
   res.send('respond with a resouurce');
 });
 
 
 //GET routes
-router.get('/add/:wid',adminController.addDoctorPage);
-router.get('/remove/:wid',adminController.removeDoctorPage);
+router.get('/add/:wid', adminController.addDoctorPage);
 router.get('/ward/:wid',adminController.wardPage);
-router.get('/allwards',adminController.allWardsPage);
-router.get('/issue',adminController.issuePage);
-router.get('/register',adminController.newRegPage);
+router.get('/allwards',ifLoggedIn,isAdmin, adminController.allWardsPage);
+router.get('/issue',ifLoggedIn,isAdmin, adminController.issuePage);
+router.get('/register',ifLoggedIn,isAdmin, adminController.newRegPage);
 
 //POST routes
 // router.post('/create',adminController.createWard);
 // router.post('/add',adminController.addDoctor);
-router.post('/issue',adminController.solveDoctorIssue);
-router.post('/register',adminController.solveRegistration);
-router.post('/reject',adminController.rejectRegistration);
+router.post('/add', adminController.addDoctor);
+router.post('/remove', adminController.removeDoctor);
+router.post('/issue',ifLoggedIn,isAdmin, adminController.solveDoctorIssue);
+router.post('/register',ifLoggedIn,isAdmin, adminController.solveRegistration);
+router.post('/reject',ifLoggedIn,isAdmin, adminController.rejectRegistration);
 
 module.exports = router;
 

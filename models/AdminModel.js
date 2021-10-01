@@ -55,21 +55,49 @@ class Admin {
         return result;
     }
 
-    static async addDoctorToWard(doctorID, wardName){
+    static async addDoctorToWard(wardID,doctorID){
+
+        if (await this.doctorExists(doctorID) && ! await this.doctorHasWard(doctorID)) {
+
+            const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+            const added = await query(
+                'INSERT INTO `doctor` (`user_id`,`ward_id`) VALUES (?,?)', [doctorID,wardID]
+            );
+            return;
+        }
+        return false;
+    }
+
+    static async doctorExists(doctorID){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const doc_exists = await query('SELECT `username` FROM `user` WHERE `user_id`=?',[doctorID]);
+
+        if(doc_exists.length==0){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    static async doctorHasWard(doctorID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query(
-            'INSERT INTO `doctor` (`user_id`, `ward_id`,) VALUES (?,?);',[doctorID, wardName]);
+        const doc_has_ward = await query('SELECT `ward_id` FROM `doctor` WHERE `user_id`=?',[doctorID]);
 
-        return result;
-        
+        if(doc_has_ward.length==0){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
     static async removeDoctorFromWard(doctorID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
             'DELETE FROM `doctor` WHERE `user_id` = ?',[doctorID]);
-        return result;
+        return;
         
     }
 
