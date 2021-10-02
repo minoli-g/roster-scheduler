@@ -1,4 +1,5 @@
 const db=require('../config/db');
+const jwt = require('jsonwebtoken');
 
 class Doctor{
 
@@ -8,7 +9,7 @@ class Doctor{
             username,
             (err, result) => {
                 if(err){
-                    callback(undefined, err);
+                    callback(err, undefined);
                 }else{
                     callback(undefined,result);
                 }
@@ -19,7 +20,7 @@ class Doctor{
         await db.query("SELECT * FROM user WHERE user_id = ?",
         [jwt.decode(token).id],(err,result)=>{
             if(err){
-                callback(undefined, err);
+                callback(err, undefined);
             }else{
                 callback(undefined,result);
             }
@@ -32,7 +33,7 @@ class Doctor{
         const sqlInsert= "INSERT INTO `leave` (`doctor_id`, `date`) VALUES (?,?);";
         await  db.query(sqlInsert,[doctor_id,date],(err, result)=>{
             if(err){
-                callback(undefined, err);
+                callback(err, undefined);
             }else{
                 callback(undefined,result);
             }
@@ -43,7 +44,7 @@ static async send_report(doctor_id, date, message, callback){
     const sqlInsert= "INSERT INTO `issue` (`doctor_id`, `message`, `date`) VALUES (?,?,?);";
     await db.query(sqlInsert,[doctor_id,message,date],(err, result)=>{
         if(err){
-            callback(undefined, err);
+            callback(err, undefined);
         }else{
             callback(undefined,result);
         }
@@ -56,7 +57,7 @@ static async select_preference(doctor_id, datelist, callback){
         doctor_id,
         (err, result) => {
             if(err){
-                callback(undefined, err);
+                callback(err, undefined);
             }else{
                 callback(undefined,result);
             }
@@ -68,8 +69,9 @@ static async select_preference(doctor_id, datelist, callback){
 static async edit_profile(uname, fname,lname,uid,token, callback){
     const sqlUpdate="UPDATE `user` SET `username`=?,`first_name` = ?,`last_name`=? WHERE `user`.`user_id` = ?;"
     await  db.query(sqlUpdate,[uname,fname,lname,uid],(err,result)=>{
+        console.log("modal", result);
         if(err){
-            callback(undefined, err);
+            callback(err, undefined);
         }else{
             callback(undefined,result);
         }
@@ -82,7 +84,7 @@ static async change_password(curpass,conpass,uid, callback){
         uid,
         (err, result) => {
             if(err){
-                callback(undefined, err);
+                callback(err, undefined);
             }else{
                 callback(undefined,result);
             } 
@@ -93,7 +95,7 @@ static async view_leave(token,userid, callback){
     const sqlSelect="SELECT DATE_FORMAT(STR_TO_DATE(date,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date`, `status` FROM `leave` WHERE `doctor_id` = ? ORDER BY date DESC";
     await db.query(sqlSelect,[userid],(err,result)=>{
         if(err){
-            callback(undefined, err);
+            callback(err, undefined);
         }else{
             callback(undefined,result);
         } 
@@ -106,7 +108,7 @@ static async view_report(token,userid, callback){
     const sqlSelect="SELECT `message`,DATE_FORMAT(STR_TO_DATE(date,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date`, `status` FROM `issue` WHERE `doctor_id` = ? ORDER BY date DESC";
     await  db.query(sqlSelect,[userid],(err,result)=>{
         if(err){
-            callback(undefined, err);
+            callback(err, undefined);
         }else{
             callback(undefined,result);
         } 
@@ -117,6 +119,4 @@ static async view_report(token,userid, callback){
 
 
 }
-
-
 module.exports=Doctor;

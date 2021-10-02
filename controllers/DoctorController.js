@@ -4,17 +4,16 @@ const db =require('../config/db');
 const jwt = require('jsonwebtoken');
 const Doctor= require("../models/Doctor")
 
+
 const login_Initial = async (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
 
     Doctor.login_Initial(username, password,(err, result)=>{
-        console.log("rusult" , result);
-        console.log("err" , err);
         if (err) {
             res.status(403).send({err: err})
         } 
-        if (result.length > 0) {
+        else if (result.length > 0) {
             bcrypt.compare(password, result[0].password,(error,response)=>{
                 if (response){
                     if(result[0].type  === "doctor"){
@@ -78,8 +77,11 @@ const apply_leave=async(req,res,next)=>{
     const doctor_id=req.body.userid;
     const date= req.body.date;
     Doctor.apply_leave(doctor_id, date, (err,result)=>{
+        // console.log(err);
         if (result){
-            // res.json({result})
+            res.json({result})
+            // console.log("hi");
+            // console.log(result);
             req.result= result;
             next();
         }else{
@@ -88,17 +90,17 @@ const apply_leave=async(req,res,next)=>{
     })
 }
 
-const send_report=async(req,re,next)=>{
+const send_report=async(req,res,next)=>{
     const doctor_id=req.body.userid;
     const date= req.body.date;
     const message= req.body.msg;
     Doctor.send_report(doctor_id, date, message, (err,result)=>{
         if (result){
-            // res.json({result})
+            res.json({result})
             req.result=result;
             next();
         }else{
-            return res.status(500).json({err: err})
+            return res.status(500).json({err: "Internel server error"})
         }
     })
 }
@@ -135,6 +137,7 @@ const edit_profile=async(req,res,next)=>{
     const token=req.headers["x-access-token"];
     Doctor.edit_profile(uname,fname, lname, uid, token, (err,result)=>{
         if(result){
+            // console.log(result);
             const cid=jwt.decode(token).id;
             db.query("SELECT * FROM user WHERE user_id = ?",[cid],(error,ru)=>{
                 if(error){
@@ -201,7 +204,7 @@ const view_leave = async(req,res,next)=>{
             return res.status(403).json({err: err})
         }else if(result){
             if(result.length >0){
-                // res.json({result})
+                res.json({result})
                 req.result=result;
                 next();
             }else{
@@ -228,7 +231,6 @@ const view_report = async(req,res,next)=>{
         }
     })
 }
-
 
 module.exports = {login_Initial, login_refresh, logout, apply_leave, send_report, 
     select_preference, edit_profile, change_password, view_leave, view_report};
