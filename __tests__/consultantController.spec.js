@@ -34,7 +34,6 @@ describe('addDoctor functionality', () => {
     });
 });
 
-
 describe('createWard functionality', () => {
 
     beforeEach();
