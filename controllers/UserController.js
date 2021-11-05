@@ -22,7 +22,7 @@ class UserController{
                 break;
             
             case("doctor"):
-                res.render('home', {username: req.session.user.username});
+                res.render('doctor/dash', {user_info:req.session.user});
                 break;
             
         }

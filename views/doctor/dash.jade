@@ -1,0 +1,31 @@
+extends ../layout 
+
+block content
+    div(class="container-fluid pt-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            h1 Doctor Dashboard
+
+            em Welcome, Dr. #{user_info.first_name}
+            br
+            a(href="/logout") Log Out
+            
+            if(message)
+                div(class="alert alert-danger") #{message}
+            br
+
+
+        div(class="container d-flex flex-column align-items-center justify-content-center")
+            a(type="button" class="btn btn-lg btn-primary col-6" href="doctor/report") View Your Roster
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="doctor/preferences") Add Preferences
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="doctor/leave") Apply for Leave
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="doctor/report") Send Report Message
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="doctor/workhrs") Working Hours History
+            br

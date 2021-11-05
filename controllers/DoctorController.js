@@ -1,234 +1,45 @@
-const bcrypt = require('bcrypt');
-const saltRounds=10;
-const db =require('../config/db');
-const jwt = require('jsonwebtoken');
-const Doctor= require("../models/Doctor")
+const doctor = require('../models/Doctor');
 
-const login_Initial = async (req, res, next) => {
-    const username = req.body.username;
-    const password = req.body.password;
+class DoctorController {
 
-    Doctor.login_Initial(username, password,(err, result)=>{
-        console.log("rusult" , result);
-        console.log("err" , err);
-        if (err) {
-            res.status(403).send({err: err})
-        } 
-        if (result.length > 0) {
-            bcrypt.compare(password, result[0].password,(error,response)=>{
-                if (response){
-                    if(result[0].type  === "doctor"){
-                        // cd server
-                        delete result[0].password
-                        const id=result[0].user_id;
-                        const token=jwt.sign({id},"jwttoken",{
-                            expiresIn: 3000,
-                        })
-                        
-                        req.session.user=result;
-                        // console.log(result);
-                        req.auth = true;
-                        req.token = token;
-                        req.result = result;
-                        req.cookie = req.session.user;
-                        next();
-                        // res.json({auth: true, token: token, result: result, cookie: req.session.user});
-                    }else{
-                        return res.json({auth: false, message: "Sorry you can't login.."})
-                    }
-                }else{
-                    return res.json({auth: false, message: "Wrong password"})
-                }
-            })
-        } else {
-           return res.json({ auth: false, message: "User doesn't exist" })
-        }
-    })
+    static reportPage(req,res){
+        res.render('doctor/report');
+    }
+
+    static rosterPage(req,res){
+        res.render('doctor/roster');
+    }
+
+    static workhrsPage(req,res){
+        res.render('doctor/workrs');
+    }
+
+    static prefPage(req,res){
+        res.render('doctor/preferences');
+    }
+
+    static leavePage(req,res){
+        res.render('doctor/leave');
+    }
+
+    static sendReport(req,res){
+
+        const doctorId = req.session.user.id;
+        doctor.submitReport(doctorId, req.body.report);
+
+        console.log(req.session.user);
+        res.render('doctor/dash', {message: "Your report was submitted", user_info:req.session.user});
+
+    }
+
+    static submitLeave(req,res){
+        console.log(req.body);
+        res.redirect('/')
+    }
+
+    static submitPreferences(req,res){
+
+    }
 }
 
-
-const login_refresh = async(req,res,next)=>{
-    const token=req.headers["x-access-token"];
-    Doctor.login_refresh(token, (err,result)=>{
-        if(err){
-            return req.status(403).send({err: err});
-         }else{
-             delete result[0].password
-             req.session.user=result;
-             req.result = result;
-             next();
-         }
-    })
-}
-const logout=async(req,res,next)=>{
-    req.session.destroy(err=>{
-        if (!err){
-            res.clearCookie("userId");
-            // res.json("Cookie Cleared")
-            req.result="Successfully logout... ";
-            next();
-        }else{
-            return res.status(400).send({err: err})
-        }
-    })
-
-}
-
-const apply_leave=async(req,res,next)=>{
-    const doctor_id=req.body.userid;
-    const date= req.body.date;
-    Doctor.apply_leave(doctor_id, date, (err,result)=>{
-        if (result){
-            // res.json({result})
-            req.result= result;
-            next();
-        }else{
-            return res.status(500).json({err: "Internel server error"})
-        }
-    })
-}
-
-const send_report=async(req,re,next)=>{
-    const doctor_id=req.body.userid;
-    const date= req.body.date;
-    const message= req.body.msg;
-    Doctor.send_report(doctor_id, date, message, (err,result)=>{
-        if (result){
-            // res.json({result})
-            req.result=result;
-            next();
-        }else{
-            return res.status(500).json({err: err})
-        }
-    })
-}
-
-const select_preference=async(req,res,next)=>{
-    const doctor_id=req.body.userid;
-    const datelist= req.body.datelist;
-    Doctor.select_preference(doctor_id, datelist, (err,result)=>{
-        if (err) {
-            return res.status(403).json({err: err})
-        } 
-        if (result.length > 0) {
-           const sqlUpdate= "UPDATE `preferences` SET `date1`=?,`date2`=?,`date3`=?,`date4`=?,`date5`=? WHERE `preferences`.`doctor_id` = ?;"
-           db.query(sqlUpdate,[...datelist,doctor_id]);
-        //    res.json({message: "Updated successfully"})
-           req.result="Updated successfully"
-           next();
-        } else {
-            const sqlInsert= "INSERT INTO `preferences` (`doctor_id`, `date1`, `date2`, `date3`, `date4`, `date5`) VALUES (?,?,?,?,?,?);"
-            db.query(sqlInsert,[doctor_id,...datelist])
-            // res.json({message: "Inserted successfully"});
-            req.result="Inserted successfully";
-            next();
-        }
-    })
-}
-
-
-const edit_profile=async(req,res,next)=>{
-    const uname= req.body.username
-    const fname= req.body.fname
-    const lname= req.body.lname
-    const uid=req.body.userid
-    const token=req.headers["x-access-token"];
-    Doctor.edit_profile(uname,fname, lname, uid, token, (err,result)=>{
-        if(result){
-            const cid=jwt.decode(token).id;
-            db.query("SELECT * FROM user WHERE user_id = ?",[cid],(error,ru)=>{
-                if(error){
-                    return res.status(403).json({err: error})
-                }else{
-                    delete ru[0].password;
-                    req.session.user=ru;
-                    // res.json({auth: true, result: ru})
-                    req.auth=true;
-                    req.result=ru;
-                    next();
-                }
-            })
-        }else{
-            return res.status(400).json({err: err})
-        }
-    })
-}
-
-const change_password=async(req,res,next)=>{
-    const curpass=req.body.curpass;
-    const conpass=req.body.conpass;
-    const uid= req.body.userid;
-    Doctor.change_password(curpass, conpass, uid, (err,result)=>{
-         
-        if (err) {
-            return res.status(403).json({err: err})
-        } 
-        else if (result.length > 0) {
-            bcrypt.compare(curpass, result[0].password,(error,response)=>{
-                if (error){
-                    res.status(403).json({err: error})
-                }else{
-                    if(response){
-                        const hash = bcrypt.hashSync(conpass, saltRounds);
-                        db.query("UPDATE `user` SET `password`=? WHERE `user`.`user_id` = ?",[hash,uid],(er,ru)=>{
-                            if(ru){
-                                // res.json({message: "Password updated successfully"});
-                                req.result="Password updated successfully";
-                                next();
-                            }else{
-                                return res.status(403).json({err: er})
-                            }
-                            
-                        })
-                    }else{
-                        return res.json({err: "Wrong current password"})
-                    }
-                    
-                }
-            })
-        }else{
-            return res.status(404).json({err: "Not found"})
-        } 
-    })
-}
-
-
-const view_leave = async(req,res,next)=>{
-    const token=req.headers["x-access-token"];
-    const userid=jwt.decode(token).id;
-    Doctor.view_leave(token, userid, (err,result)=>{
-        if (err){
-            return res.status(403).json({err: err})
-        }else if(result){
-            if(result.length >0){
-                // res.json({result})
-                req.result=result;
-                next();
-            }else{
-                return res.status(404).json({err: "Not found"})
-            }
-        }
-    })
-}
-
-const view_report = async(req,res,next)=>{
-    const token=req.headers["x-access-token"];
-    const userid=jwt.decode(token).id;
-    Doctor.view_report(token, userid, (err,result)=>{
-        if (err){
-            return res.status(403).json({err: err})
-        }else if(result){
-            if(result.length >0){
-                // res.json({result})
-                req.result=result;
-                next();
-            }else{
-                return res.status(404).json({err: "Not found"})
-            }
-        }
-    })
-}
-
-
-module.exports = {login_Initial, login_refresh, logout, apply_leave, send_report, 
-    select_preference, edit_profile, change_password, view_leave, view_report};
+module.exports = DoctorController;
