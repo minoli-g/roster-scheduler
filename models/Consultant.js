@@ -62,6 +62,8 @@ class Consultant{
 
         //get ward ID from SQL results
         console.log(result.insertId);
+        const setdefault = await query('update ward set min_docs=1, morning_start= "07:30:00", day_start= "12:00:00", night_start="22:00:00" where ward_id = ?',
+        [result.insertId]);
 
         return result.insertId;
         
