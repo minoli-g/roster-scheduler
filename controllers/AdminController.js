@@ -1,6 +1,8 @@
 bcrypt = require('bcrypt');
+const { json } = require('express');
 const Admin = require('../models/AdminModel');
-
+const Roster = require('../roster/roster');
+const date = require('date-and-time');
 
 class AdminController{
 
@@ -34,14 +36,13 @@ class AdminController{
         res.redirect(`/admin/ward/${wardID}`);
         return;
      }
-// =============have to look again==============================
+
     static async removeDoctor(req,res){
 
-        const ward = req.body.wid;
+        const wardID = req.body.wardId;
         const doctorID = req.body.doctorID;
-        console.log(ward);
         const done = await Admin.removeDoctorFromWard(doctorID);
-        res.redirect(`allwards`);
+        res.redirect(`/admin/ward/${wardID}`);
         return;
     }
 
@@ -71,6 +72,61 @@ class AdminController{
         else{
             res.redirect('/home');
         }
+    }
+
+    static async allRostersPage(req,res){
+
+        const wardID = req.params.wid;
+        const wards = await Admin.getWardRosters(wardID);
+        res.render('admin/rosters',{details: wards, id: wardID});
+
+    }
+
+    static async viewRoster(req,res){
+
+        const wardID = req.params.wid;
+        const year = req.params.y;
+        const month = req.params.m;
+        const roster = await Admin.getRoster(wardID,year,month);
+        const rr = JSON.parse(roster.roster)
+        res.render('admin/wardRoster',{details: roster, id: roster.ward_id, y:year, m:month, roster:rr});
+
+    }
+
+    static async createRoster(req,res){
+        
+        const wardID = req.body.wardID;
+
+        const now = new Date();
+        const nextMonth = date.addMonths(now,1)
+        const thisYear =now.getFullYear();
+        const thisMonth= now.getMonth()+1;
+
+        const docsID = await Admin.getWardDoctorIDs(wardID);
+        const docLeaves = await Admin.getWardDoctorLeaves(wardID,thisMonth,thisYear)
+        const minDocs = await Admin.getWardInfo(wardID);
+        const wards = await Admin.getWardRosters(wardID);   
+        
+        const allDocs = [];
+        const leaveDocs = [];
+        const leaveDates = [];
+
+        for (let x in docsID) {
+            allDocs.push(docsID[x].user_id);
+        }
+
+        
+        for (let x in docLeaves) {
+            leaveDocs.push(docLeaves[x].user_id);
+            leaveDates.push([docLeaves[x].prefered_date.getDate()]);
+        }
+
+        const roster = await Roster.createRoster(minDocs.min_docs,allDocs,leaveDocs,leaveDates,wardID);
+        
+
+        res.redirect(`roster/${wardID}`);
+        return;
+
     }
 
     static async issuePage(req,res){
