@@ -19,9 +19,20 @@ block content
                 div(class="card-body text-center")
                         form(method="POST", action="/doctor/preferences")
 
+                            - var d = new Date();
+                            - if(d.getMonth()!=11){var mindate = d.getFullYear() + "-"+ (d.getMonth()+2) + "-01"; } 
+                            - if(d.getMonth()==11) { var mindate = (d.getFullYear()+1) + "-01-01"; }
+                            
+                            - d.setMonth(d.getMonth()+2);
+                            - d.setDate(1);
+                            - d.setDate(d.getDate()-1); //last day of next month
+
+                            - var maxdate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+                            
+
                             div(class="form-group")
                                 label(for="date" class="col-md-6 col-form-label") Date
-                                input(type="date", name="date", class="form-control")
+                                input(type="date", name="date", min=mindate, max=maxdate class="form-control")
                                 br
 
                             button(type="submit" class="btn btn-info mx-3 my-3") Submit

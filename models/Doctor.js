@@ -37,7 +37,7 @@ class Doctor {
 
         if(result.length==0){ return false; }
 
-        return result[0].preferred_date;
+        return result[0].prefered_date;
     }
 
     static async updatePref(doctorId, date, month, year){

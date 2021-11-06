@@ -21,7 +21,12 @@ class DoctorController {
 
     static async prefPage(req,res){
 
-        var preference = await doctor.getPref(req.session.user.id);
+        const month = new Date().getMonth();
+        const year = new Date().getFullYear();
+
+        var preference = await doctor.getPref(req.session.user.id, month+2, year); //for next month
+        
+        //console.log(preference)
 
         if (preference){
             preference = preference.toString().slice(0, 16);
@@ -60,14 +65,14 @@ class DoctorController {
         const year = new Date().getFullYear();
 
         
-        var preference = await doctor.getPref(doctorId, month, year);
+        var preference = await doctor.getPref(doctorId, month+2, year);
 
-        console.log(preference)
+        //console.log(preference)
 
         if (!preference){
-            doctor.submitPref(doctorId, req.body.date, month, year);
+            doctor.submitPref(doctorId, req.body.date, month+2, year);
         } else {
-            doctor.updatePref(doctorId, req.body.date, month, year);
+            doctor.updatePref(doctorId, req.body.date, month+2, year);
         }
 
         res.render('doctor/preferences', {message: "Your preference was recorded", user_info:req.session.user});
