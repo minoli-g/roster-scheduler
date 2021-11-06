@@ -55,13 +55,19 @@ class DoctorController {
     static async submitPreferences(req,res){
 
         const doctorId = req.session.user.id;
-        var preference = await doctor.getPref(doctorId);
+
+        const month = new Date().getMonth();
+        const year = new Date().getFullYear();
+
+        
+        var preference = await doctor.getPref(doctorId, month, year);
+
         console.log(preference)
 
         if (!preference){
-            doctor.submitPref(doctorId, req.body.date);
+            doctor.submitPref(doctorId, req.body.date, month, year);
         } else {
-            doctor.updatePref(doctorId, req.body.date);
+            doctor.updatePref(doctorId, req.body.date, month, year);
         }
 
         res.render('doctor/preferences', {message: "Your preference was recorded", user_info:req.session.user});

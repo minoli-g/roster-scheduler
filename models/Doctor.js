@@ -22,29 +22,29 @@ class Doctor {
         [doctorId, date,'pending']);
     }
 
-    static async submitPref(doctorId, date){
+    static async submitPref(doctorId, date, month, year){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query('insert into `preferences`(`doctor_id`, `date1`) values(?,?)',
-        [doctorId, date]);
+        const result = await query('insert into `preferences`(`doctor_id`, `month`, `year`, `prefered_date`) values(?,?,?,?)',
+        [doctorId, month, year, date]);
     }
 
-    static async getPref(doctorId){
+    static async getPref(doctorId, month, year){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query('select date1 from preferences where doctor_id=?',[doctorId]);
-        //console.log(result)
+        const result = await query('select prefered_date from preferences where doctor_id=? and month=? and year=?',[doctorId, month, year]);
+
 
         if(result.length==0){ return false; }
 
-        return result[0].date1;
+        return result[0].preferred_date;
     }
 
-    static async updatePref(doctorId, date){
+    static async updatePref(doctorId, date, month, year){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query('update `preferences` set `date1` = ? where doctor_id = ?',
-        [date, doctorId]);
+        const result = await query('update `preferences` set `prefered_date` = ? where doctor_id = ? and month = ? and year = ?',
+        [date, doctorId, month, year]);
     }
 
     static async getWorkHrs(doctorId){
