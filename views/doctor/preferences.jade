@@ -8,20 +8,20 @@ block content
                 i(class="fas fa-arrow-left" style="color:#1E90FF")
                 a(href='/home') &nbsp; Back to Dashboard
             br
-            h1 Need a sudden leave this month?
-            em Apply here
-            
+            h1 What days do you wish to have off next month?
+            em The system will take this preference into account when scheduling next month's roster
+            br
             if(message)
                 div(class="alert alert-danger") #{message}
             br
 
             div(class="card rounded shadow-lg col-6")
                 div(class="card-body text-center")
-                        form(method="POST", action="/doctor/leave")
+                        form(method="POST", action="/doctor/preferences")
 
                             div(class="form-group")
-                                label(for="date" class="col-md-6 col-form-label") Message
+                                label(for="date" class="col-md-6 col-form-label") Date
                                 input(type="date", name="date", class="form-control")
                                 br
 
-                            button(type="submit" class="btn btn-info mx-3 my-3") Send
+                            button(type="submit" class="btn btn-info mx-3 my-3") Submit

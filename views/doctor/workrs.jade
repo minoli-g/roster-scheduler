@@ -1,0 +1,26 @@
+extends ../layout 
+
+block content
+
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+            br
+            h1 Your Working Hours 
+            
+            if(message)
+                div(class="alert alert-danger") #{message}
+            br
+
+            if(data)
+
+                div(class="card rounded shadow-lg col-6")
+                    div(class="card-body text-center")
+
+                            - var months = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                            
+                            
+                            for row in data
+                                p=months[row.month-1] + " "+ row.year + ": " + row.work_hrs + " hours"
