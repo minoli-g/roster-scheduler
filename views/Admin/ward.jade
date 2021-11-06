@@ -6,6 +6,9 @@ block content
 
             p
                 i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/admin/allwards') &nbsp; Back to All wards Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
                 a(href='/home') &nbsp; Back to Dashboard
 
             h1 Ward: #{wardName}
@@ -15,10 +18,10 @@ block content
                 div(class="alert alert-danger") #{message}
 
             a(href="/admin/roster/#{wardID}") 
-                h4 View Roster
+                h4 View Rosters
             br
             
-            input(type="hidden", name="wardId", value=wardId)
+            input(type="hidden", name="wardId", value=wardID)
             
             div(class="row")
                 div(class="col-md-6")
@@ -27,7 +30,7 @@ block content
 
                             h3(class="card-title") Parameters &nbsp;
 
-                            p Minimum number of doctors: #{min_docs}
+                            p Minimum number of doctors: #{min_docs*6}
 
                             p Morning shift start time: #{morning_start}
 
@@ -46,5 +49,6 @@ block content
                                 form(method="POST", action="/admin/remove") 
                                     em= doc.first_name+' '+doc.last_name
                                     //- &emsp; 
+                                    input(type="hidden", name="wardId", value=wardID)
                                     input(type="hidden", name="doctorID", value=doc.user_id)
                                     button(type="submit" class="btn btn-info") Remove

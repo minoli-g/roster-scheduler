@@ -3,12 +3,7 @@ extends layout
 block content
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
-            
-            p
-                i(class="fas fa-arrow-left" style="color:#1E90FF")
-                a(href='/home') &nbsp; Back to Dashboard
-                        
-            h3 Report messages from Doctors in your Hospital
+            h3 Report messages from Doctors in your wards
             br
             
             if(messages.length==0)
@@ -22,10 +17,11 @@ block content
                         for item in messages
                             br
                             div(class="col-6 card py-4")
-                                form(method="POST", action="/admin/issue")
+                                form(method="POST", action="/consultant/reports")
                                     em='From ' + item.first_name+ ' ' + item.last_name + ' on ' + item.date
                                     br
                                     p=item.message
                                     input(type="hidden", name="issueID", value=item.issue_id)
                                     button(type="submit" class="btn btn-info") Mark As Resolved
                                     
+                                

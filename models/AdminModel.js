@@ -28,6 +28,47 @@ class Admin {
         return result[0];
     }
 
+    static async getWardRosters(wardID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'SELECT * FROM `roster` WHERE `ward_id`=?',[wardID]);
+        
+        return result;
+    }
+
+    static async getRoster(wardID,year,month){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query(
+            'SELECT * FROM `roster` WHERE `ward_id`=? and `year`=? and `month`=?',[wardID,year,month]);
+        
+        return result[0];
+    }
+
+    static async addRoster(wardID,year,month,roster){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('INSERT INTO `roster` (`ward_id`,`year`,`month`,`roster`) VALUES (?,?,?,?);',[wardID,year,month,roster]);
+
+        return result;
+    }
+
+    static async getWardDoctorIDs(wardID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const docs = await query('select user_id from user join doctor using (user_id) where ward_id = ?',[wardID]);
+
+        return docs;
+    }
+
+    static async getWardDoctorLeaves(wardID,month,year){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('SELECT a.user_id, b.prefered_date FROM `doctor` a INNER JOIN `preferences`b ON a.user_id = b.doctor_id WHERE a.ward_id = ? AND b.month = ? AND b.year = ?',[wardID,month,year])
+    
+        return result
+    }
+
     static async getWardDoctors(wardID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
@@ -95,9 +136,11 @@ class Admin {
     static async removeDoctorFromWard(doctorID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const temp = await query(
+            'SELECT ward_id FROM `doctor` WHERE `user_id` = ?',[doctorID]);
         const result = await query(
             'DELETE FROM `doctor` WHERE `user_id` = ?',[doctorID]);
-        return;
+        return temp;
         
     }
 
@@ -147,8 +190,7 @@ class Admin {
     static async addNewUser(username,first_name,last_name,password,type){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
-        const result = await query(
-            'INSERT INTO `user` (`username`,`first_name`,`last_name`,`password`,`type`) VALUES (?,?,?,?,?);',[username,first_name,last_name,password,type]);
+        const result = await query('INSERT INTO `user` (`username`,`first_name`,`last_name`,`password`,`type`) VALUES (?,?,?,?,?);',[username,first_name,last_name,password,type]);
 
         return result;
         
