@@ -7,6 +7,9 @@ block content
 
             p
                 i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/admin/ward/#{wardId}') &nbsp; Back Ward Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
                 a(href='/home') &nbsp; Back to Dashboard
 
             h1 Add doctor(s) to the #{wardName} ward 
@@ -37,5 +40,4 @@ block content
                             input(type="hidden", name="wardId", value=wardId)
                             br
                             button(type="submit" class="btn btn-primary") Add Selection
-                            br
-                            a(class="btn btn-primary my-4" href="/admin/ward/#{wardId}") Cancel and return to ward
+                            
