@@ -10,7 +10,7 @@ const verifyjwt=(req,res,next)=>{
                return res.status("401").json({auth: false, message: "You failed to authenticate"});
             }else{
                 req.user=decoded.id;
-                next();
+                return next();
             }
         })
     }

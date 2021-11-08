@@ -1,6 +1,6 @@
 const mysql_conn = require ('../config/db');
 const util = require('util');
-
+const lkdngld=re
 class Admin {
 
     static async getWardID(wardName){
