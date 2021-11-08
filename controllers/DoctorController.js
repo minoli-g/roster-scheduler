@@ -50,7 +50,7 @@ const login_refresh = async(req,res,next)=>{
     const token=req.headers["x-access-token"];
     Doctor.login_refresh(token, (err,result)=>{
         if(err){
-            return req.status(403).send({err: err});
+            return res.status(403).send({err: err});
          }else{
              delete result[0].password
              req.session.user=result;
