@@ -18,7 +18,7 @@ class UserController{
                 break;
             
             case("admin"):
-                res.render('home', {username: req.session.user.username});
+                res.render('admin/dashboard', {username: req.session.user.username});
                 break;
             
             case("doctor"):

@@ -3,9 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const doctorRoutes = require("./routes/doctorRoutes");
-const cors= require('cors');
-
 
 var app = express();
 
@@ -28,12 +25,6 @@ const MySQLStore=require('express-mysql-session')(session);
 var connection = require('./config/db');
 var sessionStore = new MySQLStore({}/* session store options */, connection);
 
-app.use(cors({
-  origin: ["http://localhost:3006"],
-  methods: ["POST","GET"],
-  credentials: true
-}));
-
 app.use(session({
 	key: 'session_cookie_name',
 	secret: 'session_cookie_secret',
@@ -42,8 +33,6 @@ app.use(session({
 	saveUninitialized: true,
   cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
 }));
-
-app.use("/api/", doctorRoutes);
 
 //Points to the index file of the routes folder, to guide to all routes.
 app.use(require('./routes'));

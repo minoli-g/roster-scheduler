@@ -1,17 +1,43 @@
-extends ../layout 
+extends layout 
 
 block content
-    h1 Add doctor to Ward
-    h1=wardName
 
-    p=message
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
 
-    form(method="POST", action="/admin/add")
-        p Doctor ID
-            input(type="text", name="docId")
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/admin/ward/#{wardId}') &nbsp; Back Ward Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+
+            h1 Add doctor(s) to the #{wardName} ward 
+
+            if(message)
+                br
+                div(class="alert alert-danger") #{message}
             br
 
-        input(type="hidden", name="wardId", value=wardId)
+            if(doctors.length==0)
+                div(class="alert alert-danger")
+                    p Sorry, there are no available doctors.
+                    a(href="/admin/ward/#{wardId}") Back to Ward details
 
-        
-        button(type="submit") Go
+            else
+
+                div(class="card rounded shadow-lg col-md-4")
+                    div(class="card-body text-center")
+                        form(method="POST", action="/admin/add")
+
+                            h3(class="card-title") Available Doctors 
+                            for doctor in doctors
+                                div(class="form-check")
+                                    input(class="form-check-input", type="checkbox", name=doctor.user_id)
+                                    label(class="form-check-label" for=doctor.user_id)=doctor.first_name+' '+doctor.last_name
+                                    br
+
+                            input(type="hidden", name="wardId", value=wardId)
+                            br
+                            button(type="submit" class="btn btn-primary") Add Selection
+                            
