@@ -26,7 +26,7 @@ block content
                             h3(class="card-title") Parameters &nbsp;
                                 a(href="/consultant/edit/#{wardID}") (Edit)
 
-                            p Minimum number of doctors: #{min_docs}
+                            p Minimum number of doctors on one shift: #{min_docs}
 
                             p Morning shift start time: #{morning_start}
 
@@ -40,6 +40,8 @@ block content
 
                             h3(class="card-title") Doctors in this ward &nbsp; 
                                 a(href="/consultant/add/#{wardID}") (Add More)
+
+                            p (Minimum number of doctors required to be in this ward: #{min_docs*6} )
 
                             for doc in docs 
                                 p=doc.first_name+' '+doc.last_name

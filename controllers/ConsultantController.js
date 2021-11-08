@@ -101,13 +101,13 @@ class ConsultantController{
         //check if ward name and start month valid
 
         const error = validationResult(req);
+
         if(!error.isEmpty()){
             res.render('consultant/create', {message:error.errors[0].msg});
             return;
         }
 
         const wardID = await Consultant.getWardID(req.body.wardname);
-        console.log(wardID);
 
         if (wardID){
             res.render('consultant/create',{message: "That name's taken"});
@@ -138,7 +138,6 @@ class ConsultantController{
             Consultant.addDoctor(wardID,IDs[x]);
         }
 
-       console.log(IDs);
        res.redirect(`/consultant/ward/${wardID}`);
        return;
     }

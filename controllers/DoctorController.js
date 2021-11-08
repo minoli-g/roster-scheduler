@@ -340,4 +340,3 @@ const getPre = async(req, res, next)=>{
 
 module.exports = {login_Initial, login_refresh, logout, apply_leave, send_report, 
     select_preference, edit_profile, change_password, view_leave, view_report, list_doctors, list_wards,roster,doctor,work_hours, getPre};
-

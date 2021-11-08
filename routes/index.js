@@ -30,7 +30,7 @@ router.use('/example',require('./example'));
 
 router.use('/consultant',require('./consultant'));
 router.use('/admin',require('./AdminRoute'));
-router.use('/api/', require("./doctorRoutes"))
+router.use('/doctor', require('./doctorRoutes'));
 
 
 module.exports = router;

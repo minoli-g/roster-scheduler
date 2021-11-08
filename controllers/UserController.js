@@ -10,7 +10,7 @@ class UserController{
         res.render('login');
     }
 
-    static homePage(req,res){
+    static async homePage(req,res){
         switch(req.session.user.type){
             
             case("consultant"):
@@ -22,7 +22,10 @@ class UserController{
                 break;
             
             case("doctor"):
-                res.render('home', {username: req.session.user.username});
+                const hasWard = await require('../models/Doctor').hasWard(req.session.user.id);
+
+                res.render('doctor/dash', {user_info:req.session.user,
+                hasWard: hasWard});
                 break;
             
         }
