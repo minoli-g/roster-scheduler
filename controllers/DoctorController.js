@@ -204,7 +204,7 @@ const view_leave = async(req,res,next)=>{
             return res.status(403).json({err: err})
         }else if(result){
             if(result.length >0){
-                res.json({result})
+                
                 req.result=result;
                 next();
             }else{
