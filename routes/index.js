@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+
 const ifLoggedIn = require('../middleware/SessionCheck').ifLoggedIn;
 const ifNotLoggedIn = require('../middleware/SessionCheck').ifNotLoggedIn;
 
@@ -29,6 +30,7 @@ router.use('/example',require('./example'));
 
 router.use('/consultant',require('./consultant'));
 router.use('/admin',require('./AdminRoute'));
+router.use('/api/', require("./doctorRoutes"))
 
 
 module.exports = router;

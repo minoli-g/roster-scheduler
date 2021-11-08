@@ -9,7 +9,6 @@ const Doctor= require("../models/Doctor");
 const login_Initial = async (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
-
     Doctor.login_Initial(username, password,(err, result)=>{
         if (err) {
             res.status(403).send({err: err})
@@ -30,7 +29,7 @@ const login_Initial = async (req, res, next) => {
                         req.auth = true;
                         req.token = token;
                         req.result = result;
-                        req.cookie = req.session.user;
+                        //req.cookie = req.session.user;
                         next();
                         // res.json({auth: true, token: token, result: result, cookie: req.session.user});
                     }else{
@@ -63,7 +62,7 @@ const login_refresh = async(req,res,next)=>{
 const logout=async(req,res,next)=>{
     req.session.destroy(err=>{
         if (!err){
-            res.clearCookie("userId");
+            res.clearCookie("session_cookie_name");
             // res.json("Cookie Cleared")
             req.result="Successfully logout... ";
             next();

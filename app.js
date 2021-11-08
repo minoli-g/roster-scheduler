@@ -3,9 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var app = express();
-
+const cors= require('cors');
+require('dotenv').config({path:__dirname+'/env/.env.dev'});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -30,12 +30,31 @@ app.use(session({
 	secret: 'session_cookie_secret',
 	store: sessionStore,
 	resave: false,
-	saveUninitialized: true,
+	saveUninitialized: false,
   cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
 }));
 
+
+var whitelist = [process.env.FRONTEND_BASE_URL, undefined, process.env.API_BASE_URL]
+var corsOptions = {
+  origin: function (origin, callback) {
+    console.log(origin);
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  methods : "*",
+  credentials : true
+}
+
+// Then pass them to cors:
+app.use(cors(corsOptions));
 //Points to the index file of the routes folder, to guide to all routes.
 app.use(require('./routes'));
+
+// app.use("/api/", require("./routes/doctorRoutes"))
 
 
 
