@@ -66,10 +66,10 @@ static async select_preference(doctor_id, datelist, callback){
 
 }
 
-static async edit_profile(uname, fname,lname,uid,token, callback){
-    const sqlUpdate="UPDATE `user` SET `username`=?,`first_name` = ?,`last_name`=? WHERE `user`.`user_id` = ?;"
+static async edit_profile(uname, fname,lname,uid, callback){
+    const sqlUpdate="UPDATE `user` SET `username`=?,`first_name` = ?,`last_name`=? WHERE `user_id` = ?;"
     await  db.query(sqlUpdate,[uname,fname,lname,uid],(err,result)=>{
-        console.log("modal", result);
+        // console.log("modal", result);
         if(err){
             callback(err, undefined);
         }else{
@@ -78,7 +78,7 @@ static async edit_profile(uname, fname,lname,uid,token, callback){
     })
 }
 
-static async change_password(curpass,conpass,uid, callback){
+static async change_password(uid, callback){
     await db.query(
         "SELECT * FROM user WHERE user_id = ?",
         uid,
@@ -112,6 +112,75 @@ static async view_report(token,userid, callback){
         }else{
             callback(undefined,result);
         } 
+    })
+}
+
+static async list_doctors(callback){
+    const sqlSelect="SELECT * FROM `user` WHERE type='doctor'";
+    await db.query(sqlSelect,(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
+    })
+}
+
+static async list_wards(callback){
+    const sqlSelect="SELECT * FROM `ward`";
+    await db.query(sqlSelect,(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
+    })
+}
+
+
+static async roster(wardid,year,month, callback){
+    const sqlSelect="SELECT `roster` FROM `roster` WHERE `ward_id`=? AND `year`=? AND `month`=?";
+    await  db.query(sqlSelect,[wardid,year,month],(err,result)=>{
+        if(err){
+            callback(err, undefined);
+        }else{
+            callback(undefined,result);
+        } 
+    })
+}
+
+
+static async doctor(user_id,callback){
+    const sqlSelect="SELECT * FROM `user` WHERE `user_id`=? AND `type`='doctor'";
+    await db.query(sqlSelect,[user_id],(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
+    })
+}
+static async work_hours(userid,callback){
+    const sqlSelect="SELECT `month`,`work_hrs` FROM `working_hours` WHERE user_id=? ORDER BY workHour_id DESC LIMIT 12";
+    
+    await db.query(sqlSelect,[userid],(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
+    })
+}
+
+static async getPre(userid,callback){
+    const sqlSelect="SELECT DATE_FORMAT(STR_TO_DATE(date1,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date1`,DATE_FORMAT(STR_TO_DATE(date2,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date2`,DATE_FORMAT(STR_TO_DATE(date3,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date3`,DATE_FORMAT(STR_TO_DATE(date4,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date4`,DATE_FORMAT(STR_TO_DATE(date5,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date5` FROM `preferences` WHERE `doctor_id`=?";
+    
+    await db.query(sqlSelect,[userid],(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
     })
 }
 

@@ -2,7 +2,8 @@ const bcrypt = require('bcrypt');
 const saltRounds=10;
 const db =require('../config/db');
 const jwt = require('jsonwebtoken');
-const Doctor= require("../models/Doctor")
+const Doctor= require("../models/Doctor");
+
 
 
 const login_Initial = async (req, res, next) => {
@@ -134,12 +135,12 @@ const edit_profile=async(req,res,next)=>{
     const fname= req.body.fname
     const lname= req.body.lname
     const uid=req.body.userid
-    const token=req.headers["x-access-token"];
-    Doctor.edit_profile(uname,fname, lname, uid, token, (err,result)=>{
+    // const token=req.headers["x-access-token"];
+    Doctor.edit_profile(uname,fname, lname, uid, (err,result)=>{
         if(result){
             // console.log(result);
-            const cid=jwt.decode(token).id;
-            db.query("SELECT * FROM user WHERE user_id = ?",[cid],(error,ru)=>{
+            // const cid=jwt.decode(token).id;
+            db.query("SELECT * FROM user WHERE user_id = ?",uid,(error,ru)=>{
                 if(error){
                     return res.status(403).json({err: error})
                 }else{
@@ -161,7 +162,7 @@ const change_password=async(req,res,next)=>{
     const curpass=req.body.curpass;
     const conpass=req.body.conpass;
     const uid= req.body.userid;
-    Doctor.change_password(curpass, conpass, uid, (err,result)=>{
+    Doctor.change_password( uid, (err,result)=>{
          
         if (err) {
             return res.status(403).json({err: err})
@@ -232,5 +233,112 @@ const view_report = async(req,res,next)=>{
     })
 }
 
+const list_doctors = async(req, res, next)=>{
+    Doctor.list_doctors((err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                delete result[0].password;
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not Found"});
+            }
+
+        }
+    })
+}
+const list_wards = async(req, res, next)=>{
+    Doctor.list_wards((err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not Found"});
+            }
+
+        }
+    })
+}
+
+const roster = async(req,res,next)=>{
+    const wardid=req.query.wardid;
+    const year=req.query.year;
+    const month=req.query.month;
+    Doctor.roster( wardid,year,month, (err,result)=>{
+        if (err){
+            return res.status(403).json({err: err})
+        }else if(result){
+            if(result.length >0){
+                // res.json({result})
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err: "Not found"})
+            }
+        }
+    })
+}
+
+const doctor = async(req, res, next)=>{
+    const user_id=req.query.id;
+    Doctor.doctor(user_id,(err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                delete result[0].password;
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not Found"});
+            }
+
+        }
+    })
+}
+const work_hours = async(req, res, next)=>{
+    const userid= req.query.userid;
+    Doctor.work_hours(userid,(err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not found"});
+            }
+
+        }
+    })
+}
+
+const getPre = async(req, res, next)=>{
+    console.log("hi");
+    const userid= req.query.userid;
+    Doctor.getPre(userid,(err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not found"});
+            }
+
+        }
+    })
+}
+
+
+
+
 module.exports = {login_Initial, login_refresh, logout, apply_leave, send_report, 
-    select_preference, edit_profile, change_password, view_leave, view_report};
+    select_preference, edit_profile, change_password, view_leave, view_report, list_doctors, list_wards,roster,doctor,work_hours, getPre};
+
