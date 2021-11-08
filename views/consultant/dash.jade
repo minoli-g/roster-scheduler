@@ -1,0 +1,29 @@
+extends ../layout 
+
+block content
+    div(class="container-fluid pt-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            h1 Consultant Dashboard
+
+            em Welcome, Consultant. #{user_info.first_name}
+            br
+            a(href="/logout") Log Out
+            
+            if(message)
+                div(class="alert alert-danger") #{message}
+            br
+
+
+        div(class="container d-flex flex-column align-items-center justify-content-center")
+            a(type="button" class="btn btn-lg btn-primary col-6" href="consultant/create") Create New Ward 
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="consultant/wards") View and Manage Wards 
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="consultant/reports") Report Messages
+            br
+
+            a(type="button" class="btn btn-lg btn-primary col-6" href="consultant/leaves") Leave Applications
+            br
+

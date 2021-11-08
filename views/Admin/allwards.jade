@@ -1,0 +1,26 @@
+extends layout 
+
+block content
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+
+            h1 All the wards in Your Hospital  
+            em Click on a ward's name to see its details.
+            br
+
+            if(details.length==0)
+                div(class="alert alert-danger")
+                    p You don't have any wards yet. 
+                        a(href="/consultant/create") Create one to get started.
+            
+            else
+                div(class="card rounded shadow-lg col-md-4")
+                        div(class="card-body text-center")
+                            for ward in details 
+                                a(href="/admin/ward/#{ward.ward_id}")
+                                    h3=ward.ward_name
+                                br

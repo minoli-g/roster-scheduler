@@ -1,0 +1,47 @@
+extends layout 
+
+
+block content
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/consultant/roster/#{id}') &nbsp; Back all Rosters
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/consultant/ward/#{id}') &nbsp; Back Ward Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+
+            p
+                h1 Roster of the Ward #{id} for the Year #{y}, Month #{m}
+                br
+
+    table.table.table-striped#dashboardTable(style="width:80%")
+            thead
+                tr 
+                th(style='width:15px') Date
+                th(style='width:15px') Morning Shift Doctor IDs'
+                th(style='width:15px') Evening Shift Doctors IDs'
+                th(style='width:15px') Night Shift Doctors IDs'
+            tbody
+                each routine, day in roster
+                    tr
+                    td= day
+                    td= routine.Morning
+                    td= routine.Evening
+                    td= routine.Night
+
+            
+
+    
+
+              
+                
+                
+
+
+
+

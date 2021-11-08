@@ -1,0 +1,56 @@
+extends layout 
+
+block content
+    div(class="container-fluid py-4")
+        div(class="jumbotron text-center")
+
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/admin/allwards') &nbsp; Back to All wards Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+
+            h1 Ward: #{wardName}
+
+            if(message)
+                br
+                div(class="alert alert-danger") #{message}
+
+            a(href="/admin/roster/#{wardID}") 
+                h4 View Rosters
+            br
+            
+            input(type="hidden", name="wardId", value=wardID)
+            
+            div(class="row")
+                div(class="col-md-6")
+                    div(class="card rounded shadow-lg")
+                        div(class="card-body text-center")
+
+                            h3(class="card-title") Parameters &nbsp;
+
+                            p Minimum number of doctors: #{min_docs*6}
+
+                            p Morning shift start time: #{morning_start}
+
+                            p Day shift start time: #{day_start}
+
+                            p Night shift start time: #{night_start} 
+
+                div(class="col-md-6")
+                    div(class="card rounded shadow-lg")
+                        div(class="card-body text-center")
+
+                            h3(class="card-title") Doctors in this ward &nbsp; 
+                                a(href="/admin/add/#{wardID}") (Add More)
+                            
+                            p (Minimum number of doctors required to be in this ward: #{min_docs*6} )
+
+                            for doc in docs
+                                form(method="POST", action="/admin/remove") 
+                                    em= doc.first_name+' '+doc.last_name
+                                    //- &emsp; 
+                                    input(type="hidden", name="wardId", value=wardID)
+                                    input(type="hidden", name="doctorID", value=doc.user_id)
+                                    button(type="submit" class="btn btn-info") Remove

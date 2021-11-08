@@ -1,0 +1,35 @@
+extends ../layout 
+
+block content
+
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+            br
+            h1 Need a sudden leave this month?
+            em Apply here
+            
+            if(message)
+                div(class="alert alert-danger") #{message}
+            br
+
+            div(class="card rounded shadow-lg col-6")
+                div(class="card-body text-center")
+                        form(method="POST", action="/doctor/leave")
+
+                            - var d = new Date();
+                            - if (d.getDate()<10) { var day = "0"+(d.getDate()+1); } else { var day = d.getDate()+1; }
+                            - var mindate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + day; 
+                            - d.setMonth(d.getMonth()+1);
+                            - d.setDate(1);
+                            - d.setDate(d.getDate()-1);
+                            - var maxdate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + (d.getDate());
+
+                            div(class="form-group")
+                                label(for="date" class="col-md-6 col-form-label") Message
+                                input(type="date", name="date", min=mindate, max=maxdate, class="form-control")
+                                br
+
+                            button(type="submit" class="btn btn-info mx-3 my-3") Send

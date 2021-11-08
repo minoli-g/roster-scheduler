@@ -1,0 +1,32 @@
+extends layout 
+
+
+block content
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/consultant/ward/#{id}') &nbsp; Back Ward Details
+                br
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+
+            h1 All the Rosters of the Ward #{wardID} 
+            em Click on a month to see its Roster.
+            br
+
+
+            if(details.length==0)
+                div(class="alert alert-danger")
+                    p You don't have Rosters for this ward yet. 
+                        
+            
+            else
+                div(class="card rounded shadow-lg col-md-4")
+                        div(class="card-body text-center")
+                            for ward in details 
+                                a(href="/consultant/roster/#{ward.ward_id}/#{ward.year}/#{ward.month}")
+                                    h3=ward.year + ' - ' + ward.month
+                                br
+
