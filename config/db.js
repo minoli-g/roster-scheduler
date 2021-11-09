@@ -1,18 +1,18 @@
 var mysql = require('mysql')
 
-const db_config = {
-host: 'us-cdbr-east-04.cleardb.com',
-user: 'b654e8927ee26b',
-password: '090cb62d',  //change this to local machine's password
-database: 'heroku_8a6f7a873a84775'
-}
-
 // const db_config = {
-//   host: 'localhost',
-//   user: 'root',
-//   password: '',  //change this to local machine's password
-//   database: 'roster'
-//   }
+// host: 'us-cdbr-east-04.cleardb.com',
+// user: 'b654e8927ee26b',
+// password: '090cb62d',  //change this to local machine's password
+// database: 'heroku_8a6f7a873a84775'
+// }
+
+const db_config = {
+  host: 'localhost',
+  user: 'root',
+  password: '',  //change this to local machine's password
+  database: 'roster'
+  }
 var connection;
 
 function handleDisconnect() {

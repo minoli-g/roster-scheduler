@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
 const cors= require('cors');
-require('dotenv').config({path:__dirname+'/env/.env.prod'});
+require('dotenv').config({path:__dirname+'/env/.env.dev'});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
