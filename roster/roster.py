@@ -203,7 +203,7 @@ leave_dates_list = ast.literal_eval(sys.argv[4])
 year = int(sys.argv[5])
 month = int(sys.argv[6])
 
-print(main(num_days,num_minDoctor,all_doctors,leave_dates_list,year,month))
+# print(main(num_days,num_minDoctor,all_doctors,leave_dates_list,year,month))
 
 
 

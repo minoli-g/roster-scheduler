@@ -13,7 +13,6 @@ router.get('/preferences', doctorController.prefPage);
 
 router.get('/roster/:wid',ifLoggedIn,isDoctor,doctorController.allRostersPage);
 router.get('/roster/:wid/:y/:m',ifLoggedIn,isDoctor,doctorController.viewRoster);
-// router.get('/roster/myRoster',ifLoggedIn,isDoctor,doctorController.viewMyRoster);
 router.get('/roster/:wid/:y/:m/:uid',ifLoggedIn,isDoctor,doctorController.viewMyRoster);
 
 

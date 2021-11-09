@@ -193,13 +193,19 @@ def main(num_days, num_minDoctor, all_doctors,leave_doctors, leave_dates_list, y
 num_days = int(sys.argv[1])
 num_minDoctor = int(sys.argv[2])
 all_doctors = list(ast.literal_eval(sys.argv[3]))
-leave_doctors = list(ast.literal_eval(sys.argv[4]))
-leave_dates_list = list(ast.literal_eval(sys.argv[5]))
+
+if (len(sys.argv[4])==0):
+    leave_doctors = []
+    leave_dates_list = []
+else:
+    leave_doctors = list(ast.literal_eval(sys.argv[4]))
+    leave_dates_list = list(ast.literal_eval(sys.argv[5]))
+    
 year = int(sys.argv[6])
 month = int(sys.argv[7])
 ward_id = int(sys.argv[8])
 
-print(main(num_days,num_minDoctor,all_doctors,leave_doctors,leave_dates_list,year,month))
+# print(main(num_days,num_minDoctor,all_doctors,leave_doctors,leave_dates_list,year,month))
 
 
 roster = main(num_days,num_minDoctor,all_doctors,leave_doctors,leave_dates_list,year,month)

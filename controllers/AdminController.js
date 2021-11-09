@@ -100,34 +100,37 @@ class AdminController{
         const now = new Date();
         const nextMonth = date.addMonths(now,1)
         const thisYear =now.getFullYear();
-        const thisMonth= now.getMonth()+1;
+        const thisMonth= now.getMonth()+2;
 
         const docsID = await Admin.getWardDoctorIDs(wardID);
         const docLeaves = await Admin.getWardDoctorLeaves(wardID,thisMonth,thisYear)
         const minDocs = await Admin.getWardInfo(wardID);
         const wards = await Admin.getWardRosters(wardID);   
-        
+        const rr = await Admin.getRoster(wardID,thisYear,thisMonth); 
+
         const allDocs = [];
         const leaveDocs = [];
         const leaveDates = [];
 
-        
         for (let x in docsID) {
             allDocs.push(docsID[x].user_id);
         }
-
+        
         
         for (let x in docLeaves) {
             leaveDocs.push(docLeaves[x].user_id);
             leaveDates.push([docLeaves[x].prefered_date.getDate()]);
         }
-        console.log(docLeaves);
-        console.log(leaveDocs);
-        const roster = await Roster.createRoster(minDocs.min_docs,allDocs,leaveDocs,leaveDates,wardID);
-        
 
-        res.redirect(`roster/${wardID}`);
-        return;
+        if (!rr){
+            const roster = await Roster.createRoster(minDocs.min_docs,allDocs,leaveDocs,leaveDates,wardID);
+            res.redirect(`roster/${wardID}`);
+            return;
+
+        } else if ((wardID == rr.ward_id) && (thisYear == rr.year) && (thisMonth == rr.month)){
+            res.render('admin/rosters',{message: "Sorry Roster already created.",details: wards, id: wardID}); 
+            return;
+        }
 
     }
 
