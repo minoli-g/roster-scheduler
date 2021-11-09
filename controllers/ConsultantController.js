@@ -37,7 +37,7 @@ class ConsultantController{
 
         const consultantID = req.session.user.id;
         const reports = await Consultant.getReports(consultantID);
-        res.render('reports',{messages: reports});
+        res.render('consultant/reports',{messages: reports});
 
     }
 

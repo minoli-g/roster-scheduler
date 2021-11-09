@@ -2,6 +2,84 @@ extends ../layout
 
 block content
 
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/create") Create
+
+                        li(class="nav-item active")
+                            a(class="nav-link" href="/consultant/wards") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/reports") Reports
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/leaves") Leave Apps
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        h4(class="display-4") Ward: #{wardName}
+
+        h2 Edit Ward Parameters &nbsp; 
+                a(href="/consultant/ward/#{wardId}") (Cancel)
+        br 
+
+        if(message)
+            br
+            div(class="alert alert-danger") #{message}
+
+        div(class="card rounded shadow-lg col-6")
+            div(class="card-body text-center")
+                form(method="POST", action="/consultant/edit")
+
+                    input(type="hidden", name="wardId", value=wardId)
+
+                    div(class="form-group form-row")
+                        label(for="min_docs" class="col-md-6 col-form-label") Minimum number of doctors
+                            small(class="form-text text-muted") The minimum number of doctors that should be present in the ward at any moment.
+                        input(type="number", name="min_docs", value=min_docs, class="col-md-6 form-control")
+                        br
+
+                    div(class="form-group form-row")
+                        label(for="morning_start" class="col-md-6 col-form-label") Morning shift start time 
+                        input(type="time" name="morning_start" value=morning_start class="col-md-6 form-control")
+                        br
+
+                    div(class="form-group form-row")
+                        label(for="day_start" class="col-md-6 col-form-label") Daytime shift start time 
+                        input(type="time" name="day_start" value=day_start class="col-md-6 form-control")
+                        br
+
+                    div(class="form-group form-row")
+                        label(for="night_start" class="col-md-6 col-form-label") Night shift start time 
+                        input(type="time" name="night_start" value=night_start class="col-md-6 form-control")
+                        br
+
+                    button(type="submit" class="btn btn-primary") Change Parameters
+
+
+    br
+    br
+//
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
 
@@ -48,6 +126,3 @@ block content
                                 br
         
                             button(type="submit" class="btn btn-primary") Change Parameters
-
-
-    

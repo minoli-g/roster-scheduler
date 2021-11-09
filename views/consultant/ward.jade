@@ -1,6 +1,98 @@
 extends ../layout 
 
 block content
+
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/create") Create
+
+                        li(class="nav-item active")
+                            a(class="nav-link" href="/consultant/wards") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/reports") Reports
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/leaves") Leave Apps
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        h4(class="display-4") Ward: #{wardName}
+
+        if(message)
+                br
+                div(class="alert alert-danger") #{message}
+
+        a(href="/consultant/roster/#{wardID}") 
+            h4 View Roster
+        br
+
+        div(class="row w-100")
+            div(class="col-md-6")
+                div(class="card rounded shadow-lg mr-10 ml-4")
+                    div(class="card-body text-center")
+
+                        h3(class="card-title") Parameters &nbsp;
+                            a(href="/consultant/edit/#{wardID}") (Edit)
+
+                        table(class="table table-bordered")
+                            tbody 
+                                tr 
+                                    td Minimum no. of doctors per shift 
+                                    td #{min_docs}
+
+                                tr 
+                                    td Morning shift starts at:
+                                    td #{morning_start}
+
+                                tr 
+                                    td Day shift starts at:
+                                    td #{day_start}
+
+                                tr 
+                                    td Night shift starts at:
+                                    td #{night_start}
+
+            div(class="col-md-6")
+                div(class="card rounded shadow-lg mx-4")
+                    div(class="card-body text-center")
+
+                        h3(class="card-title") Doctors in this ward (#{docs.length})
+                            br 
+                            a(href="/consultant/add/#{wardID}") (Add More)
+
+                        em Roster creation requires at least #{min_docs*6} doctors
+                        br
+                        br
+
+                        for doc in docs 
+                            p(class="list-group-item p-1")=doc.first_name+' '+doc.last_name
+
+    br
+    br
+
+
+//
     div(class="container-fluid py-4")
         div(class="jumbotron text-center")
 
