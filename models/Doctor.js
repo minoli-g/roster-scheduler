@@ -51,9 +51,9 @@ static async send_report(doctor_id, date, message, callback){
     })
 }
 
-static async select_preference(doctor_id, datelist, callback){
+static async select_preference(doctor_id, callback){
     await  db.query(
-        "SELECT * FROM `preferences` WHERE doctor_id = ?",
+        "SELECT * FROM `preferences` WHERE doctor_id =? AND month = MONTH(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)) AND year = YEAR(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH))",
         doctor_id,
         (err, result) => {
             if(err){
@@ -173,7 +173,8 @@ static async work_hours(userid,callback){
 }
 
 static async getPre(userid,callback){
-    const sqlSelect="SELECT DATE_FORMAT(STR_TO_DATE(date1,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date1`,DATE_FORMAT(STR_TO_DATE(date2,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date2`,DATE_FORMAT(STR_TO_DATE(date3,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date3`,DATE_FORMAT(STR_TO_DATE(date4,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date4`,DATE_FORMAT(STR_TO_DATE(date5,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `date5` FROM `preferences` WHERE `doctor_id`=?";
+    console.log("getPre");
+    const sqlSelect="SELECT DATE_FORMAT(STR_TO_DATE(prefered_date,'%Y-%m-%dT%H:%i:%s.000Z'),'%Y-%m-%d') AS `prefered_date` FROM `preferences` WHERE doctor_id = ? AND month = MONTH(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)) AND year = YEAR(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH))";
     
     await db.query(sqlSelect,[userid],(err,result)=>{
         if(err){
@@ -184,6 +185,17 @@ static async getPre(userid,callback){
     })
 }
 
+static async countPre(userid,callback){
+    const sqlSelect="SELECT COUNT(*) FROM `preferences` WHERE doctor_id = ? AND month = MONTH(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)) AND year = YEAR(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH))";
+    
+    await db.query(sqlSelect,[userid],(err,result)=>{
+        if(err){
+            callback(err,undefined);
+        }else{
+            callback(undefined,result)
+        }
+    })
+}
 
 
 

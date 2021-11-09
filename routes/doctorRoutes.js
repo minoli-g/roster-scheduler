@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {login_Initial,login_refresh,logout,apply_leave,send_report,select_preference,
-     edit_profile,change_password,work_hours,view_leave,view_report, list_doctors, list_wards, roster,doctor,getPre}= require('../controllers/DoctorController')
+     edit_profile,change_password,work_hours,view_leave,view_report, list_doctors, list_wards, roster,doctor,getPre, countPre}= require('../controllers/DoctorController')
 const verifyjwt= require('../middleware/verifyJWT');
 
 
@@ -47,6 +47,9 @@ router.get('/selectedSlots', verifyjwt, getPre, async (req,res)=>{
      res.status(200).json({result : req.result})
 })
 
+router.get('/countPre', verifyjwt, countPre, async (req,res)=>{
+     res.status(200).json({result : req.result})
+})
 router.get('/doctor', verifyjwt, doctor, async (req,res)=>{
      res.status(200).json({result : req.result})
 })

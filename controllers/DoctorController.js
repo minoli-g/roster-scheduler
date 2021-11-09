@@ -79,7 +79,7 @@ const apply_leave=async(req,res,next)=>{
     Doctor.apply_leave(doctor_id, date, (err,result)=>{
         // console.log(err);
         if (result){
-            res.json({result})
+            // res.json({result})
             // console.log("hi");
             // console.log(result);
             req.result= result;
@@ -96,7 +96,7 @@ const send_report=async(req,res,next)=>{
     const message= req.body.msg;
     Doctor.send_report(doctor_id, date, message, (err,result)=>{
         if (result){
-            res.json({result})
+            // res.json({result})
             req.result=result;
             next();
         }else{
@@ -107,20 +107,21 @@ const send_report=async(req,res,next)=>{
 
 const select_preference=async(req,res,next)=>{
     const doctor_id=req.body.userid;
-    const datelist= req.body.datelist;
-    Doctor.select_preference(doctor_id, datelist, (err,result)=>{
+    const date= req.body.date;
+    Doctor.select_preference(doctor_id, (err,result)=>{
+        console.log(result);
         if (err) {
             return res.status(403).json({err: err})
         } 
         if (result.length > 0) {
-           const sqlUpdate= "UPDATE `preferences` SET `date1`=?,`date2`=?,`date3`=?,`date4`=?,`date5`=? WHERE `preferences`.`doctor_id` = ?;"
-           db.query(sqlUpdate,[...datelist,doctor_id]);
+           const sqlUpdate= "UPDATE `preferences` SET prefered_date=? WHERE `preferences`.`doctor_id` = ? AND preferences.month = MONTH(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)) AND preferences.year = YEAR(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH))"
+           db.query(sqlUpdate,[date,doctor_id]);
         //    res.json({message: "Updated successfully"})
            req.result="Updated successfully"
            next();
         } else {
-            const sqlInsert= "INSERT INTO `preferences` (`doctor_id`, `date1`, `date2`, `date3`, `date4`, `date5`) VALUES (?,?,?,?,?,?);"
-            db.query(sqlInsert,[doctor_id,...datelist])
+            const sqlInsert= "INSERT INTO `preferences` (`doctor_id`,year,month,prefered_date) VALUES (?,YEAR(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)),MONTH(ADDDATE(CURRENT_DATE, INTERVAL 1 MONTH)),?)"
+            db.query(sqlInsert,[doctor_id,date])
             // res.json({message: "Inserted successfully"});
             req.result="Inserted successfully";
             next();
@@ -318,7 +319,6 @@ const work_hours = async(req, res, next)=>{
 }
 
 const getPre = async(req, res, next)=>{
-    console.log("hi");
     const userid= req.query.userid;
     Doctor.getPre(userid,(err,result)=>{
         if(err){
@@ -335,8 +335,24 @@ const getPre = async(req, res, next)=>{
     })
 }
 
+const countPre = async(req, res, next)=>{
+    const userid= req.query.userid;
+    Doctor.countPre(userid,(err,result)=>{
+        if(err){
+            return res.status(403).json({err : err});
+        }else if(result){
+            if(result.length>0){
+                req.result=result;
+                next();
+            }else{
+                return res.status(404).json({err : "Not found"});
+            }
+
+        }
+    })
+}
 
 
 
 module.exports = {login_Initial, login_refresh, logout, apply_leave, send_report, 
-    select_preference, edit_profile, change_password, view_leave, view_report, list_doctors, list_wards,roster,doctor,work_hours, getPre};
+    select_preference, edit_profile, change_password, view_leave, view_report, list_doctors, list_wards,roster,doctor,work_hours, getPre,countPre};

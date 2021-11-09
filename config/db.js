@@ -11,7 +11,7 @@ database: 'heroku_8a6f7a873a84775'
 //   host: 'localhost',
 //   user: 'root',
 //   password: '',  //change this to local machine's password
-//   database: 'schedular'
+//   database: 'roster'
 //   }
 var connection;
 
