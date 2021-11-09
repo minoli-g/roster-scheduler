@@ -2,7 +2,7 @@ extends layout
 
 block content
 
-    div(class="container-fluid py-4")
+    div(class="container-fluid")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
             h1 Log In to Roster Scheduler
             em Don't have an account yet? 
@@ -19,12 +19,12 @@ block content
                     form(method="POST", action="/login")
                         div(class="form-group form-row")
                             label(for="username" class="col-form-label") Username 
-                            input(type="text", name="username", class="col-sm-8 form-control")
+                            input(type="text", name="username", class="col-sm-8 form-control" required="required")
                             br
 
                         div(class="form-group form-row")
                             label(for="password" class="col-form-label") Password 
-                            input(type="password" name="password", class="col-sm-8 form-control")
+                            input(type="password" name="password", class="col-sm-8 form-control" required="required")
                             br
 
                         button(type="submit" class="btn btn-info mx-3 my-3") Go

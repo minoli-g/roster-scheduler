@@ -2,6 +2,66 @@ extends ../layout
 
 block content
 
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+        a(class="navbar-brand" href="/home") Roster Scheduler
+        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+
+        div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+            ul(class="navbar-nav mr-auto")
+                
+                li(class="nav-item")
+                    a(class="nav-link" href="#") Roster
+
+                li(class="nav-item")
+                    a(class="nav-link" href="/doctor/preferences") Preferences 
+
+                li(class="nav-item")
+                    a(class="nav-link" href="/doctor/leave") Leave
+
+                li(class="nav-item active")
+                    a(class="nav-link" href="/doctor/report") Report Issue 
+
+                li(class="nav-item")
+                    a(class="nav-link" href="/doctor/workhrs") History
+
+            span(class="navbar-text ml-auto") 
+            ul(class="navbar-nav")
+                li(class="nav-item active")
+                    
+                    a(class="nav-link" href="/logout") Log Out
+                        span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        h4(class="display-4") Report an Issue 
+        em Your message will be sent to the consultant and hospital admin.
+
+        if(message)
+            div(class="alert alert-danger") #{message}
+        br
+
+        div(class="card rounded shadow-lg col-6")
+            div(class="card-body text-center")
+                    form(method="POST", action="/doctor/report")
+
+                        div(class="form-group")
+                            label(for="report" class="col-md-6 col-form-label") Message
+                            input(type="text", name="report", class="form-control")
+                            br
+
+                        button(type="submit" class="btn btn-info mx-3 my-3") Send
+
+        br
+        br
+
+
+//
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
             p

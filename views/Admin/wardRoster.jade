@@ -2,46 +2,70 @@ extends layout
 
 
 block content
-    div(class="container-fluid py-4")
-        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
 
-            p
-                i(class="fas fa-arrow-left" style="color:#1E90FF")
-                a(href='/admin/roster/#{id}') &nbsp; Back all Rosters
-                br
-                i(class="fas fa-arrow-left" style="color:#1E90FF")
-                a(href='/admin/ward/#{id}') &nbsp; Back Ward Details
-                br
-                i(class="fas fa-arrow-left" style="color:#1E90FF")
-                a(href='/home') &nbsp; Back to Dashboard
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
 
-            p
-                h1 Roster of the Ward #{id} for the Year #{y}, Month #{m}
-                br
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/admin/register") Registrations
 
-    table.table.table-striped#dashboardTable(style="width:80%")
-            thead
-                tr 
-                th(style='width:15px') Date
-                th(style='width:15px') Morning Shift Doctor IDs'
-                th(style='width:15px') Evening Shift Doctors IDs'
-                th(style='width:15px') Night Shift Doctors IDs'
-            tbody
-                each routine, day in roster
-                    tr
-                    td= day
-                    td= routine.Morning
-                    td= routine.Evening
-                    td= routine.Night
+                        li(class="nav-item active")
+                            a(class="nav-link" href="/admin/allwards") Wards 
+                                span(class="sr-only")
 
-            
+                        li(class="nav-item")
+                            a(class="nav-link" href="/admin/issue") Reports
 
-    
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
 
-              
-                
-                
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        p
+            i(class="fas fa-arrow-left" style="color:#1E90FF")
+            a(href='/admin/ward/#{id}') &nbsp; Back to Ward Details
+
+        - const months = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        h4(class="display-4") Roster for #{months[m-1]} #{y}
+        br
 
 
+        - function getDate(day_no) { var dy= day_no.substring(4,6);
+        - var d = new Date(y,m-1,1); d.setDate(dy); return d.toDateString();}
+
+        - function getDocName(id) { for (let x in doc_info) {
+        - if(doc_info[x].user_id == id) { return (doc_info[x].first_name + " " + doc_info[x].last_name)};
+        - }}
+
+        - function getNameList(idList) { const nameList = []; for (let i in idList) {nameList.push(getDocName(idList[i]))} return nameList; }
+        
 
 
+        table.table.table-striped#dashboardTable(style="width:80%")
+                thead
+                    tr 
+                    th(style='width:15px') Date
+                    th(style='width:15px') Morning Shift 
+                    th(style='width:15px') Evening Shift 
+                    th(style='width:15px') Night Shift 
+                tbody
+                    each routine, day in roster
+                        tr
+                        td= getDate(day)
+                        td= getNameList(routine.Morning)
+                        td= getNameList(routine.Evening)
+                        td= getNameList(routine.Night)

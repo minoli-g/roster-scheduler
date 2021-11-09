@@ -20,7 +20,49 @@ block content
     br
     br
     br
-    
+    br
+    div(class="d-flex flex-column text-center align-items-center justify-content-center card-deck")
+        h1(class="display-4") Dashboard
+        br
+        if(message)
+            div(class="alert alert-danger") #{message}
+        br
+
+        div(class="row")
+
+            div(class="col-lg-4 py-3")
+                div(class="card rounded shadow-lg h-100")
+                    div(class="card-body text-center")
+                        a(class="btn btn-outline-dark btn-lg stretched-link" href="admin/register") New Registrations
+                        br
+                        br
+                        em Approve incoming registration requests
+                        br
+                        em This keeps strangers from cluttering the system.
+
+            div(class="col-lg-4 py-3")
+                div(class="card rounded shadow-lg h-100")
+                    div(class="card-body text-center")
+                        a(class="btn btn-outline-dark btn-lg stretched-link" href="admin/allwards") Manage Wards
+                        br
+                        br
+                        em Manage all the wards in the hospital.
+                        br
+                        em View ward details and rosters, and remove doctors if necessary
+
+            div(class="col-lg-4 py-3")
+                div(class="card rounded shadow-lg h-100")
+                    div(class="card-body text-center")
+                        a(class="btn btn-outline-dark btn-lg stretched-link" href="admin/issue") Report Messages
+                        br
+                        br
+                        em Reports sent by any doctor in the hospital 
+                        br
+                        em Resolve the issue with the doctor and dismiss the messages.
+
+    br
+    br
+//    
     div(class="container-fluid pt-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
             h1 Admin Dashboard

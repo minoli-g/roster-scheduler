@@ -1,6 +1,98 @@
 extends ../layout 
 
 block content
+
+    div
+
+        nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+            a(class="navbar-brand" href="#") Roster Scheduler
+            button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                span(class="navbar-toggler-icon")
+    
+            div(class="collapse navbar-collapse" id="navbarSupportedContent")
+                span(class="navbar-text ml-auto") Logged in as #{user_info.first_name} #{user_info.last_name}, #{user_info.type}. &nbsp;
+                ul(class="navbar-nav")
+                    li(class="nav-item active")
+                        
+                        a(class="nav-link" href="/logout") Log Out. 
+                            span(class="sr-only") (current)
+
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center card-deck")
+        h1(class="display-4") Dashboard
+        br
+        if(message)
+            div(class="alert alert-danger") #{message}
+        br
+
+        if (!hasWard)
+            div(class="card rounded shadow-lg col-6")
+                    div(class="card-body text-center")
+                        p You will be able to view your roster and working hours, report issues, set preferences and apply for leave when you are assigned a ward. 
+                br
+        else
+            div(class="row mt-3")
+                div(class="col")
+                    div(class="card rounded shadow-lg h-100")
+                        div(class="card-body text-center")
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/roster/#{wardID}") Your Roster
+                            br
+                            br
+                            em View the roster for your ward
+                            br
+                            em And the shifts scheduled for you separately
+
+                div(class="col")
+                    div(class="card rounded shadow-lg h-100")
+                        div(class="card-body text-center")
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/preferences") Set Preferences
+                            br
+                            br
+                            em Tell us which day you want off in the next month. 
+                            br
+                            em We'll keep that day free when we create the roster.
+
+                div(class="col")
+                    div(class="card rounded shadow-lg h-100")
+                        div(class="card-body text-center")
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/leave") Apply For Leave
+                            br
+                            br
+                            em Need a day off in this month itself?
+                            br
+                            em When your consultant approves your request, we'll fill the slot.
+
+            br
+            div(class="row mt-3")
+                div(class="col")
+                    div(class="card rounded shadow-lg h-100")
+                        div(class="card-body text-center")
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/report") Report an Issue
+                            br
+                            br
+                            em Something wrong with your schedule? 
+                            br
+                            em Inform your consultant and hospital admin of the issue.
+
+                div(class="col")
+                    div(class="card rounded shadow-lg h-100")
+                        div(class="card-body text-center")
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/workhrs") Work History
+                            br
+                            br
+                            em View your work statistics 
+                            br
+                            em We store data about your working hours - it helps us schedule things!
+    br
+    br
+
+
+
+
+//
     div(class="container-fluid pt-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
             h1 Doctor Dashboard

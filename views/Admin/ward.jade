@@ -16,7 +16,7 @@ block content
 
                         li(class="nav-item active")
                             a(class="nav-link" href="/admin/allwards") Wards 
-                                span(class="sr-only")(current)
+                                span(class="sr-only")
 
                         li(class="nav-item")
                             a(class="nav-link" href="/admin/reports") Reports
@@ -40,8 +40,11 @@ block content
                 br
                 div(class="alert alert-danger") #{message}
 
-        a(href="/admin/roster/#{wardID}") 
-            h4 View Roster
+        if(docs.length<min_docs*6) 
+            div(class="alert alert-warning") Not enough doctors to create a roster! 
+        else
+            a(href="/admin/roster/#{wardID}") 
+                h4 View Roster
         br
 
         div(class="row w-100")

@@ -1,6 +1,88 @@
 extends layout 
 
 block content
+
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item active")
+                            a(class="nav-link" href="/admin/register") Registrations
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/admin/allwards") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/admin/issue") Reports
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        h4(class="display-4") New Registration Requests 
+        em Doctors and consultants in the hospital request to be registered. Approve or reject them.
+        br
+
+        if(messages.length==0)
+            div(class="alert alert-danger") 
+                p No New Registrations at the moment  
+
+        else
+            div(class="row w-100")
+            for item in messages 
+                div(class="card rounded shadow-lg col-4 m-3")
+                    div(class="card-body text-center")
+                        table(class="table")
+                            tbody 
+                                tr
+                                    td Type: #{item.type}
+                                    td 
+                                        form(method="POST", action="/admin/register")
+                                            input(type="hidden", name="reqID", value=item.req_id)
+                                            button(type="submit" class="btn btn-info") Accept
+
+                                tr
+                                    td #{item.first_name} #{item.last_name}
+                                    td 
+                                        form(method="POST", action="/admin/reject")
+                                            input(type="hidden", name="reqID", value=item.req_id)
+                                            button(type="submit" class="btn btn-danger") Reject
+
+
+
+
+        //
+            div(class="row mb-3 w-100")
+                for item in messages
+                    br
+                    div(class="w-50 list-group-item my-1")
+                        em='A ' + item.type+ ' named ' + item.first_name + ' ' + item.last_name + ' Registered'
+                        &emsp;                           
+                        form(method="POST", action="/admin/register")
+                            input(type="hidden", name="reqID", value=item.req_id)
+                            button(type="submit" class="btn btn-info") Accept
+                        &emsp; 
+                        form(method="POST", action="/admin/reject")
+                            input(type="hidden", name="reqID", value=item.req_id)
+                            button(type="submit" class="btn btn-info") Reject
+
+
+//
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
             

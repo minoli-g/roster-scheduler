@@ -168,7 +168,7 @@ class Admin {
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
-            'select issue_id, first_name, last_name, message, date from issue join user on issue.doctor_id = user.user_id where status = 0x00;');
+            'select issue_id, first_name, last_name, message, date from issue join user on issue.doctor_id = user.user_id where status = 0;');
 
         return result;
         
@@ -178,7 +178,7 @@ class Admin {
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query(
-            'UPDATE `issue` SET `status` = 0x01 WHERE `issue_id` = ?',[issueID]);
+            'UPDATE `issue` SET `status` = 1 WHERE `issue_id` = ?',[issueID]);
 
         return; 
     }

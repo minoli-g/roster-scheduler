@@ -125,7 +125,8 @@ class AdminController{
         const month = req.params.m;
         const roster = await Admin.getRoster(wardID,year,month);
         const rr = JSON.parse(roster.roster)
-        res.render('admin/wardRoster',{details: roster, id: roster.ward_id, y:year, m:month, roster:rr});
+        const doc_info = await Admin.getWardDoctors(wardID);
+        res.render('admin/wardRoster',{details: roster, doc_info:doc_info, id: roster.ward_id, y:year, m:month, roster:rr});
 
     }
 
