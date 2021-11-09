@@ -6,6 +6,42 @@ const date = require('date-and-time');
 
 class AdminController{
 
+    static async ghostSignupPage(req,res){
+        console.log(process.env.ADMIN_KEY);
+        res.render('ghost');
+    }
+
+    static async ghostSignup(req,res){
+
+        const password = await bcrypt.hash(req.body.pwd1,10);
+
+        var user_info = await user.getUserByUsername(req.body.username);
+        user_info = user_info[0];
+
+        var regReq = await user.checkRegReq(req.body.username);
+        regReq = regReq[0];
+
+        if (user_info || regReq) {
+            res.render('ghost',{message: "Sorry, that username is taken"});
+            return;
+        }
+
+        console.log(process.env.ADMIN_KEY);
+
+        if (req.body.secretkey != process.env.ADMIN_KEY){
+            console.log(req.body.secretkey);
+            
+            res.render('ghost',{message: "Incorrect key"});
+            return;
+        }
+
+        await Admin.addNewUser( req.body.username, req.body.first_name,
+            req.body.last_name, password, "admin");
+
+        res.render('login',{message:"Success. You can now log in."})
+        return;
+    }
+
     static async addDoctorPage(req,res){
         
         var wardID = req.params.wid;

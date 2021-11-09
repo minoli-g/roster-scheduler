@@ -18,13 +18,15 @@ class UserController{
                 break;
             
             case("admin"):
-                res.render('admin/dashboard', {username: req.session.user.username});
+                res.render('admin/dashboard', {user_info:req.session.user});
                 break;
             
             case("doctor"):
                 const userID = req.session.user.id;
                 const hasWard = await require('../models/Doctor').hasWard(req.session.user.id);
-                const wardID = await user.getDoctorWard(userID);
+                var wardID = {ward_id: "invalid"};
+
+                if(hasWard) { wardID = await user.getDoctorWard(userID); }
 
                 res.render('doctor/dash', {user_info:req.session.user,
                 hasWard: hasWard, wardID:wardID.ward_id});

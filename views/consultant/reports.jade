@@ -1,0 +1,94 @@
+extends layout 
+
+block content
+
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/create") Create
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/wards") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item active")
+                            a(class="nav-link" href="#") Reports
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/leaves") Leave Apps
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        h4(class="display-4") Report Messages 
+        em Messages sent by doctors in your wards in case of issues 
+        br
+
+        if(messages.length==0)
+            div(class="alert alert-danger") 
+                p No reports at the moment 
+
+        else
+            ul
+                div(class="row mb-3 w-100")
+                    for item in messages
+                        - var date = new Date(item.date).toDateString();
+                        br
+                        div(class="w-50 list-group-item my-1")
+                            form(method="POST", action="/consultant/reports")
+                                em(class="float-left")=item.first_name+ ' ' + item.last_name + ' : ' + date
+                                br
+                                p(class="float-left") #{item.message} &nbsp;
+                                input(type="hidden", name="issueID", value=item.issue_id)
+                                button(type="submit" class="btn btn-info float-right") Mark As Resolved
+
+
+
+//
+    div(class="container-fluid py-4")
+        div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
+
+            p
+                i(class="fas fa-arrow-left" style="color:#1E90FF")
+                a(href='/home') &nbsp; Back to Dashboard
+            h3 Report messages from Doctors in your wards
+            br
+            
+            if(messages.length==0)
+                div(class="alert alert-danger") 
+                    p No reports at the moment 
+
+            else
+
+                ul
+                    div(class="row")
+                        for item in messages
+                            - var date = new Date(item.date).toDateString();
+                            br
+                            div(class="col-6 card py-4")
+                                form(method="POST", action="/consultant/reports")
+                                    em='From ' + item.first_name+ ' ' + item.last_name + ' on ' + date
+                                    br
+                                    p=item.message
+                                    input(type="hidden", name="issueID", value=item.issue_id)
+                                    button(type="submit" class="btn btn-info") Mark As Resolved
+                                    
+                                

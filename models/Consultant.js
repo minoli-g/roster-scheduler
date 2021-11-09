@@ -162,7 +162,7 @@ class Consultant{
             'select issue_id, first_name, last_name, message, date from issue join user on issue.doctor_id = user.user_id where status = 0 and doctor_id in (select user_id from doctor where ward_id in (select ward_id from ward join user on ward.consultant_id=user.user_id  where ward.consultant_id=?));',
             [consultantID]
         );
-        console.log(issues);
+        //console.log(issues);
         return issues;
 
     }
