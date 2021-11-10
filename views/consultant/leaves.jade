@@ -11,3 +11,36 @@ block content
             h1 Pending leave applications
             em Applications sent by doctors in your ward, for sudden leave in this month
             br
+
+        
+
+        if !(details)
+            div(class="alert alert-danger") 
+                p No Leave requests at the moment 
+        if(message)
+            br
+            div(class="alert alert-danger") #{message}
+            br
+
+
+        else
+            ul
+                div(class="row mb-3 w-100")
+                    for item in details
+                        - var newDate = new Date(item.date).toDateString();
+                        br
+                        div(class="w-50 list-group-item my-1")
+                            em(class="float-left")='Doctor No: ' + item.user_id + ' from ward : ' + item.ward_id + ' wants a leave on : ' + newDate
+                            //- br item.leave_id
+                            
+                            form(method="POST", action="/consultant/leaveApprove")     
+                                input(type="hidden", name="date", value=item.date)
+                                input(type="hidden", name="doctorID", value=item.user_id)
+                                input(type="hidden", name="leaveID", value=item.leave_id)
+                                input(type="hidden", name="wardID", value=item.ward_id)
+                                button(type="submit" class="btn btn-info float-right") Approve
+                            br
+                            br    
+                            form(method="POST", action="/consultant/leaveReject")
+                                input(type="hidden", name="leaveID", value=item.leave_id)                        
+                                button(type="submit" class="btn btn-info float-right") Reject

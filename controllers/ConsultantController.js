@@ -26,12 +26,86 @@ class ConsultantController{
 
     static async leaveAppPage(req,res){
 
-        //const consultantID = req.session.user.id;
-        //const leaves = await Consultant.getLeaveApps(consultantID);
-        //res.render('consultant/leaves',{applications: leaves});
-        res.render('consultant/leaves');
+        const consultantID = req.session.user.id;
+        const leaves = await Consultant.getAllLeavesOfConsultant(consultantID);
+        res.render('consultant/leaves', {details:leaves});
 
     }
+
+    static async rejectLeave(req,res){
+        
+        const leaveID = req.body.leaveID;
+        const reject = await Consultant.rejectLeave(leaveID);
+
+        res.redirect('leaves');
+    }
+
+    static async approveLeave(req,res){
+
+        const consultantID = req.session.user.id;
+        const leaveID = req.body.leaveID;
+        const wardID  = req.body.wardID;
+        const leaves = await Consultant.getAllLeavesOfConsultant(consultantID);
+        const docid = req.body.doctorID;
+        const leave = await Consultant.getLeave(leaveID);
+        const day = leave[0].date.getDate();
+        const month = leave[0].date.getMonth()+1;
+        const year = leave[0].date.getFullYear();
+        const roster = await Consultant.getRoster(wardID,year,month);
+        const rr = JSON.parse(roster.roster);
+        const docsID = await Consultant.getWardDoctorIDs(wardID);
+        var allDocs = [];
+
+        for (let x in docsID) {
+            allDocs.push(docsID[x].user_id);
+        }
+
+        function arrayRemove(arr, value) { 
+            return arr.filter(function(ele){ 
+                return ele != value; 
+            });
+        }
+
+        if (!(rr[`Day ${day}`].Morning == `${docid}` || rr[`Day ${day}`].Evening == `${docid}` || rr[`Day ${day}`].Night == `${docid}`)){
+            console.log("Doc is not there, Leave can be approved");
+            var msg = "Leave Approved" 
+        } else {
+        
+            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Morning);
+            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Evening);
+            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Night);
+            if (day != 1){
+                var allDocs = arrayRemove(allDocs, rr[`Day ${day-1}`].Night);
+            }
+
+            if (allDocs.length == 0){
+                console.log("Leave cannot be approved");
+                var msg = "Leave cannot be approved" 
+            } else if (!!(rr[`Day ${day}`].Morning == `${docid}`)){
+                console.log("Morning");
+                var msg = "Leave Approved" 
+                rr[`Day ${day}`].Morning = [allDocs[0]]
+            }else if (!!(rr[`Day ${day}`].Evening == `${docid}`)){
+                console.log("Evening");
+                var msg = "Leave Approved" 
+                rr[`Day ${day}`].Evening = [allDocs[0]]
+            }else if (!!(rr[`Day ${day}`].Night == `${docid}`)){
+                console.log("Night");
+                var msg = "Leave Approved" 
+                rr[`Day ${day}`].Night = [allDocs[0]]
+            }   
+        }
+
+        const ros = JSON.stringify(rr);
+
+        const nero = await Consultant.updateRoster(ros,wardID,year,month);
+        const accept = await Consultant.approveLeave(leaveID);
+
+        res.render('consultant/leaves', {message: msg, details:leaves});
+        // res.redirect('leaves');
+        return;
+    }
+
 
     static async reportMsgPage(req,res){
 
@@ -204,7 +278,6 @@ class ConsultantController{
         res.render('consultant/wardRoster',{details: roster, id: roster.ward_id, y:year, m:month, roster:rr});
 
     }
-
 
 
 

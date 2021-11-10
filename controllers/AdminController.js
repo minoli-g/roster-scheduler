@@ -129,21 +129,21 @@ class AdminController{
 
     }
 
-    static async createRoster(req,res){
+    static async createRoster(req,res,next){
         
         const wardID = req.body.wardID;
 
         const now = new Date();
         const nextMonth = date.addMonths(now,1)
-        const thisYear =now.getFullYear();
-        const thisMonth= now.getMonth()+2;
+        const thisYear =nextMonth.getFullYear();
+        const thisMonth= nextMonth.getMonth()+1;
 
         const docsID = await Admin.getWardDoctorIDs(wardID);
         const docLeaves = await Admin.getWardDoctorLeaves(wardID,thisMonth,thisYear)
         const minDocs = await Admin.getWardInfo(wardID);
         const wards = await Admin.getWardRosters(wardID);   
-        const rr = await Admin.getRoster(wardID,thisYear,thisMonth); 
-
+        const monthRoster = await Admin.getRoster(wardID,thisYear,thisMonth); 
+        
         const allDocs = [];
         const leaveDocs = [];
         const leaveDates = [];
@@ -158,12 +158,14 @@ class AdminController{
             leaveDates.push([docLeaves[x].prefered_date.getDate()]);
         }
 
-        if (!rr){
+        if (!monthRoster){
             const roster = await Roster.createRoster(minDocs.min_docs,allDocs,leaveDocs,leaveDates,wardID);
+            
             res.redirect(`roster/${wardID}`);
+            // next();
             return;
 
-        } else if ((wardID == rr.ward_id) && (thisYear == rr.year) && (thisMonth == rr.month)){
+        } else if ((wardID == monthRoster.ward_id) && (thisYear == monthRoster.year) && (thisMonth == monthRoster.month)){
             res.render('admin/rosters',{message: "Sorry Roster already created.",details: wards, id: wardID}); 
             return;
         }
@@ -207,7 +209,85 @@ class AdminController{
         return;
     }
 
+    static async calculateWorkHours(req,res){
 
+        const wardID = req.body.wardID;
+        const docsID = await Admin.getWardDoctorIDs(wardID);
+        const allDocs = [];
+
+        for (let x in docsID) {
+            allDocs.push(docsID[x].user_id);
+        }
+
+        const now = new Date();
+        const nextMonth = date.addMonths(now,1)
+        const thisYear =nextMonth.getFullYear();
+        const thisMonth= nextMonth.getMonth()+1;
+
+        const roster = await Admin.getRoster(wardID,thisYear,thisMonth);
+        console.log(roster);
+        const wards = await Admin.getWardRosters(wardID);
+        const rr = JSON.parse(roster.roster)
+
+        const doc = {id:0, Morning:[], Evening:[], Night:[]};
+
+        const dd = [];
+
+        for (let x in allDocs) {
+            const doc = {id:0, Morning:0, Evening:0, Night:0};
+            doc.id = allDocs[x];
+            for (let i = 0; i < 31; i++) {
+                if (JSON.stringify(Object.values(rr[`Day ${i+1}`]["Morning"])) === JSON.stringify([allDocs[x]])){
+                    doc.Morning += 1;                    
+                } else if (JSON.stringify(Object.values(rr[`Day ${i+1}`]["Evening"])) === JSON.stringify([allDocs[x]])){
+                    doc.Evening += 1;                   
+                } else if (JSON.stringify(Object.values(rr[`Day ${i+1}`]["Night"])) === JSON.stringify([allDocs[x]])){
+                    doc.Night += 1;
+                }
+            }
+            dd.push(doc)    
+        }
+        
+        const ward = await Admin.getWardInfo(wardID);
+
+        var morning = new Date(`2021-01-01 ${ward.morning_start}`);
+        var day = new Date(`2021-01-01 ${ward.day_start}`);
+        var night = new Date(`2021-01-01 ${ward.night_start}`);
+
+        function getTimeDiff(startDate,endDate) {
+            
+            var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+
+            var hh = Math.floor(timeDiff / 1000 / 60 / 60);   
+            hh = ('0' + hh).slice(-2)
+        
+            timeDiff -= hh * 1000 * 60 * 60;
+            var mm = Math.floor(timeDiff / 1000 / 60);
+            mm = ('0' + mm).slice(-2)
+            
+            return (hh + "." + (mm/60)*100);
+        }
+
+        const m = parseFloat(getTimeDiff(morning,day));
+        const d = parseFloat(getTimeDiff(day,night));
+        const n = 24 - parseFloat(getTimeDiff(night,morning));
+ 
+
+        for (let i = 0; i < dd.length ; i++){
+            const wr = await Admin.getWorkHours(dd[i].id,thisMonth,thisYear);
+            if(!wr){
+                var hrs = dd[i].Morning*m + dd[i].Evening*d + dd[i].Night*n;
+                const wrk = await Admin.addWorkHours(dd[i].id,thisMonth,thisYear,hrs);
+                
+            }
+        }
+
+        
+        res.redirect(`roster/${wardID}`);
+        
+        // res.render('admin/rosters',{message: "Sorry Roster already created.",details: wards, id: wardID}); 
+        return;
+    }
 
 
 

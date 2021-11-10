@@ -20,8 +20,15 @@ block content
                 input(type="hidden", name="wardID", value=id)
                 button(type="submit" class="btn btn-info") Create Roster For the Coming Month
                 br
+            
+            //- br
+            //- form(method="POST", action="/admin/calculate")
+            //-     input(type="hidden", name="wardID", value=id)
+            //-     button(type="submit" class="btn btn-info") Calculate Working Hours for Coming Month
+            //-     br
 
             if(message)
+                br
                 div(class="alert alert-danger") #{message}
             br
 

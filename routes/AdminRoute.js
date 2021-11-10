@@ -33,6 +33,7 @@ router.post('/register',ifLoggedIn,isAdmin, adminController.solveRegistration);
 router.post('/reject',ifLoggedIn,isAdmin, adminController.rejectRegistration);
 router.post('/roster',ifLoggedIn,isAdmin,adminController.createRoster);
 router.post('/ghost',ifNotLoggedIn, adminController.ghostSignup);
+// router.post('/calculate',ifLoggedIn,isAdmin,adminController.calculateWorkHours);
 
 
 

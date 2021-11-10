@@ -54,6 +54,26 @@ class Admin {
         return result;
     }
 
+    static async addWorkHours(userID,month,year,hours){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('INSERT INTO `working_hours` (`user_id`,`month`,`year`,`work_hrs`) VALUES (?,?,?,?);',[userID,month,year,hours]);
+        return result;
+    }
+
+    static async getWorkHours(userID,month,year){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('SELECT * FROM `working_hours` WHERE `user_id` = ? AND `month` = ? AND `year` = ?;',[userID,month,year]);
+        return result[0];
+    }
+    
+    static async getMinWorkHours(wardID,month,year){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('SELECT a.user_id, b.work_hrs FROM `doctor` a INNER JOIN `working_hours` b WHERE a.user_id = b.user_id AND `ward_id` = ? AND `month`= ? AND `year` = ? ORDER BY b.work_hrs',[wardID,month,year]);
+        return result;
+    }
+
     static async getWardDoctorIDs(wardID){
 
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);

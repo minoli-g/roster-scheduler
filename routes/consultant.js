@@ -29,6 +29,8 @@ router.post('/create',ifLoggedIn, isConsultant,consultantValidator.checkCreateWa
 router.post('/add',ifLoggedIn, isConsultant,consultantController.addDoctor);
 router.post('/edit',ifLoggedIn, isConsultant, consultantValidator.checkEditParams(), consultantController.editParams);
 router.post('/reports',ifLoggedIn,isConsultant, consultantController.resolveIssue);
+router.post('/leaveReject',ifLoggedIn,isConsultant, consultantController.rejectLeave);
+router.post('/leaveApprove',ifLoggedIn,isConsultant, consultantController.approveLeave);
 //router.post('/leaves',ifLoggedIn,isConsultant, consultantController.updateLeave);
 
 module.exports = router;

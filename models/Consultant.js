@@ -42,6 +42,14 @@ class Consultant{
         return result[0];
 
     }
+    
+    static async getWardDoctorIDs(wardID){
+
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const docs = await query('select user_id from user join doctor using (user_id) where ward_id = ?',[wardID]);
+
+        return docs;
+    }
 
     static async allWards(consultantID){
 
@@ -191,11 +199,40 @@ class Consultant{
         return result[0];
     }
 
+    static async getAllLeavesOfConsultant(consultantID){
 
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('SELECT * FROM (SELECT * FROM `doctor` a INNER JOIN `leave` b WHERE a.user_id = b.doctor_id AND b.status = "pending") x INNER JOIN (SELECT ward_id FROM `ward` WHERE `consultant_id`= ?) y WHERE x.ward_id = y.ward_id',[consultantID]);
+        
+        if(result.length==0){
+            return false;
+        }
+        return result;
+    }
 
+    static async rejectLeave(leaveID){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const resolve = await query('UPDATE `leave` set status= "rejected" where `leave_id`= ?',[leaveID]);
+        return;
+    }
 
+    static async approveLeave(leaveID){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const resolve = await query('UPDATE `leave` set status= "approved" where `leave_id`= ?',[leaveID]);
+        return;
+    }
 
+    static async getLeave(leaveID){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const result = await query('SELECT * FROM `leave` WHERE `leave_id` = ?',[leaveID]);
+        return result;
+    }
 
+    static async updateRoster(newRoster,warsID,year,month){
+        const query = util.promisify(mysql_conn.query).bind(mysql_conn);
+        const resolve = await query('UPDATE `roster` set `roster` = ? where `ward_id`= ? AND `year` = ? AND `month` = ?',[newRoster,warsID,year,month]);
+        return;
+    }
 
 }
 
