@@ -26,7 +26,6 @@ block content
         br
         if(message)
             div(class="alert alert-danger") #{message}
-        br
 
         if (!hasWard)
             div(class="card rounded shadow-lg col-6")
@@ -55,15 +54,6 @@ block content
                             br
                             em We'll keep that day free when we create the roster.
 
-                div(class="col")
-                    div(class="card rounded shadow-lg h-100")
-                        div(class="card-body text-center")
-                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/leave") Apply For Leave
-                            br
-                            br
-                            em Need a day off in this month itself?
-                            br
-                            em When your consultant approves your request, we'll fill the slot.
 
             br
             div(class="row mt-3")
@@ -80,12 +70,12 @@ block content
                 div(class="col")
                     div(class="card rounded shadow-lg h-100")
                         div(class="card-body text-center")
-                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/workhrs") Work History
+                            a(class="btn btn-outline-dark btn-lg stretched-link" href="/doctor/leave") Apply For Leave
                             br
                             br
-                            em View your work statistics 
+                            em Need a day off in this month itself?
                             br
-                            em We store data about your working hours - it helps us schedule things!
+                            em When your consultant approves your request, we'll fill the slot.
     br
     br
 

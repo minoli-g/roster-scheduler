@@ -1,9 +1,9 @@
 var mysql = require('mysql')
 
 var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'chamod1998@CSE',  //change this to local machine's password
+  host: 'roster.mysql.database.azure.com',
+  user: 'rosteradmin@roster',
+  password: 'Heroku34',  //change this to local machine's password
   database: 'roster'
 })
 

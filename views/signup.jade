@@ -4,7 +4,7 @@ block content
 
     div(class="container-fluid")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center pb-3")
-            h1 Sign up for Roster Scheduler
+            h4(class="display-4") Sign up for Roster Scheduler
             em All users are subject to manual verification, so your registration request may take a while to be processed.
             em Have an account already? &nbsp;
                 a(href="/login") Log In.
@@ -12,7 +12,6 @@ block content
             if(message)
                 br
                 div(class="alert alert-danger") #{message}
-            br
 
             div(class="card rounded shadow-lg col-6")
                 div(class="card-body text-center")
@@ -54,4 +53,4 @@ block content
                             input(type="password" name="pwd2", class="col-md-6 form-control" required="required")
                             br
 
-                        button(type="submit" class="btn btn-info") Submit
+                        button(type="submit" class="btn btn-outline-dark") Submit
