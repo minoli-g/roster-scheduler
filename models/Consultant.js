@@ -204,6 +204,7 @@ class Consultant{
         const query = util.promisify(mysql_conn.query).bind(mysql_conn);
         const result = await query('SELECT * FROM (SELECT * FROM `doctor` a INNER JOIN `leave` b WHERE a.user_id = b.doctor_id AND b.status = "pending") x INNER JOIN (SELECT ward_id FROM `ward` WHERE `consultant_id`= ?) y WHERE x.ward_id = y.ward_id',[consultantID]);
         
+        console.log(result);
         if(result.length==0){
             return false;
         }

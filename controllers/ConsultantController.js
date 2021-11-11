@@ -28,6 +28,8 @@ class ConsultantController{
 
         const consultantID = req.session.user.id;
         const leaves = await Consultant.getAllLeavesOfConsultant(consultantID);
+        console.log(consultantID)
+        console.log(leaves);
         res.render('consultant/leaves', {details:leaves});
 
     }
