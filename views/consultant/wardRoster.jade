@@ -1,7 +1,79 @@
 extends layout 
 
-
 block content
+
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/create") Create
+
+                        li(class="nav-item active")
+                            a(class="nav-link" href="#") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/reports") Reports
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/leaves") Leave Apps
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+        p
+            i(class="fas fa-arrow-left" style="color:#1E90FF")
+            a(href='/consultant/roster/#{id}') &nbsp; Back to Rosters
+
+        - const months = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        h4(class="display-4") Roster for #{months[m-1]} #{y}
+        br
+
+
+        - function getDate(day_no) { var dy= day_no.substring(4,6);
+        - var d = new Date(y,m-1,1); d.setDate(dy); return d.toDateString();}
+
+        - function getDocName(id) { for (let x in doc_info) {
+        - if(doc_info[x].user_id == id) { return (doc_info[x].first_name + " " + doc_info[x].last_name)};
+        - }}
+
+        - function getNameList(idList) { const nameList = []; for (let i in idList) {nameList.push(getDocName(idList[i]))} return nameList; }
+        
+
+
+        table.table.table-striped#dashboardTable(style="width:80%")
+                thead
+                    tr 
+                    th(style='width:15px') Date
+                    th(class="table-warning" style='width:15px') Morning Shift 
+                    th(class="table-light" style='width:15px') Evening Shift 
+                    th(class="table-secondary" style='width:15px') Night Shift 
+                tbody
+                    each routine, day in roster
+                        tr
+                        td= getDate(day)
+                        td= getNameList(routine.Morning)
+                        td= getNameList(routine.Evening)
+                        td= getNameList(routine.Night)
+
+
+//
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
 

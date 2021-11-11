@@ -275,7 +275,8 @@ class ConsultantController{
         const month = req.params.m;
         const roster = await Consultant.getRoster(wardID,year,month);
         const rr = JSON.parse(roster.roster)
-        res.render('consultant/wardRoster',{details: roster, id: roster.ward_id, y:year, m:month, roster:rr});
+        const doc_info = await require('../models/AdminModel').getWardDoctors(wardID);
+        res.render('consultant/wardRoster',{doc_info:doc_info, details: roster, id: roster.ward_id, y:year, m:month, roster:rr});
 
     }
 

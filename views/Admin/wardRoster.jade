@@ -37,7 +37,7 @@ block content
     div(class="d-flex flex-column text-center align-items-center justify-content-center")
         p
             i(class="fas fa-arrow-left" style="color:#1E90FF")
-            a(href='/admin/ward/#{id}') &nbsp; Back to Ward Details
+            a(href='/admin/roster/#{id}') &nbsp; Back to Rosters
 
         - const months = ['January', 'February', 'March', 'April','May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         h4(class="display-4") Roster for #{months[m-1]} #{y}
@@ -59,9 +59,9 @@ block content
                 thead
                     tr 
                     th(style='width:15px') Date
-                    th(style='width:15px') Morning Shift 
-                    th(style='width:15px') Evening Shift 
-                    th(style='width:15px') Night Shift 
+                    th(class="table-warning" style='width:15px') Morning Shift 
+                    th(class="table-light" style='width:15px') Evening Shift 
+                    th(class="table-secondary" style='width:15px') Night Shift 
                 tbody
                     each routine, day in roster
                         tr

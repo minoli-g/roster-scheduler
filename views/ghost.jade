@@ -17,32 +17,32 @@ block content
 
                         div(class="form-group form-row")
                             label(for="first_name" class="col-md-6 col-form-label") First Name
-                            input(type="text" name="first_name" , class="col-md-6 form-control")
+                            input(type="text" name="first_name" , class="col-md-6 form-control" required="required" minlength="2" maxlength="20")
                             br
 
                         div(class="form-group form-row")
                             label(for="last_name" class="col-md-6 col-form-label") Last Name
-                            input(type="text" name="last_name" , class="col-md-6  form-control")
+                            input(type="text" name="last_name" , class="col-md-6  form-control" required="required" minlength="2" maxlength="20")
                             br
 
                         div(class="form-group form-row")
                             label(for="username" class="col-md-6 col-form-label") Choose an Username
-                            input(type="text" name="username" , class="col-md-6 form-control")
+                            input(type="text" name="username" , class="col-md-6 form-control" required="required" minlength="5" maxlength="20")
                             br
 
                         div(class="form-group form-row")
                             label(for="secretkey" class="col-md-6 col-form-label") Secret Key
-                            input(type="password" name="secretkey", class="col-md-6 col-sm-8 form-control")
+                            input(type="password" name="secretkey", class="col-md-6 col-sm-8 form-control" required="required")
                             br
 
                         div(class="form-group form-row")
                             label(for="pwd1" class="col-md-6 col-form-label") Password
-                            input(type="password" name="pwd1", class="col-md-6 col-sm-8 form-control")
+                            input(type="password" name="pwd1", class="col-md-6 col-sm-8 form-control" required="required")
                             br
 
                         div(class="form-group form-row")
                             label(for="pwd2" class="col-md-6 col-form-label") Re-enter Password
-                            input(type="password" name="pwd2", class="col-md-6 form-control")
+                            input(type="password" name="pwd2", class="col-md-6 form-control" required="required")
                             br
 
                         button(type="submit" class="btn btn-info") Submit
