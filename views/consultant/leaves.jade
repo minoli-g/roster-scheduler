@@ -1,6 +1,83 @@
 extends ../layout 
 
 block content
+
+    nav(class="navbar fixed-top navbar-expand-lg navbar-light bg-light")
+                a(class="navbar-brand" href="/home") Roster Scheduler
+                button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class="navbar-toggler-icon")
+        
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+
+                    ul(class="navbar-nav mr-auto")
+                        
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/create") Create
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/wards") Wards 
+                                span(class="sr-only")(current)
+
+                        li(class="nav-item active")
+                            a(class="nav-link" href="#") Reports
+
+                        li(class="nav-item")
+                            a(class="nav-link" href="/consultant/leaves") Leave Apps
+
+                    span(class="navbar-text ml-auto") 
+                    ul(class="navbar-nav")
+                        li(class="nav-item active")
+                            
+                            a(class="nav-link" href="/logout") Log Out
+                                span(class="sr-only") (current)
+
+    br
+    br
+    br
+    br
+
+    div(class="d-flex flex-column text-center align-items-center justify-content-center")
+
+        p
+            i(class="fas fa-arrow-left" style="color:#1E90FF")
+            a(href='/home') &nbsp; Back to Dashboard
+
+        h4(class="display-4") Pending leave applications
+        em Applications sent by doctors in your ward, for sudden leave in this month
+        br
+
+        if !(details)
+            div(class="alert alert-danger") 
+                p No Leave requests at the moment 
+        if(message)
+            br
+            div(class="alert alert-danger") #{message}
+            br
+
+
+        else
+            ul
+                div(class="row mb-3 w-100")
+                    for item in details
+                        - var newDate = new Date(item.date).toDateString();
+                        br
+                        div(class="w-50 list-group-item my-1")
+                            em(class="float-left")='Doctor No: ' + item.user_id + ' from ward : ' + item.ward_id + ' wants a leave on : ' + newDate
+                            //- br item.leave_id
+                            
+                            form(method="POST", action="/consultant/leaveApprove")     
+                                input(type="hidden", name="date", value=item.date)
+                                input(type="hidden", name="doctorID", value=item.user_id)
+                                input(type="hidden", name="leaveID", value=item.leave_id)
+                                input(type="hidden", name="wardID", value=item.ward_id)
+                                button(type="submit" class="btn btn-info float-right mx-3") Approve
+                            br
+                            br    
+                            form(method="POST", action="/consultant/leaveReject")
+                                input(type="hidden", name="leaveID", value=item.leave_id)                        
+                                button(type="submit" class="btn btn-info float-right") Reject
+
+//
     div(class="container-fluid py-4")
         div(class="jumbotron d-flex flex-column text-center align-items-center justify-content-center")
 
