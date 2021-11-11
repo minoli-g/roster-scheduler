@@ -197,6 +197,10 @@ all_doctors = list(ast.literal_eval(sys.argv[3]))
 if (len(sys.argv[4])==0):
     leave_doctors = []
     leave_dates_list = []
+
+elif (len((sys.argv[4]).split(",")) == 1):
+    leave_doctors = list([ast.literal_eval(sys.argv[4])])
+    leave_dates_list = list([ast.literal_eval(sys.argv[5])])
 else:
     leave_doctors = list(ast.literal_eval(sys.argv[4]))
     leave_dates_list = list(ast.literal_eval(sys.argv[5]))
