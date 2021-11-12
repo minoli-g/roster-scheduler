@@ -68,33 +68,44 @@ class ConsultantController{
             });
         }
 
-        if (!(rr[`Day ${day}`].Morning == `${docid}` || rr[`Day ${day}`].Evening == `${docid}` || rr[`Day ${day}`].Night == `${docid}`)){
+        if (!(rr[`Day ${day}`].Morning.find(element => element == `${docid}`) == `${docid}` || rr[`Day ${day}`].Evening == `${docid}` || rr[`Day ${day}`].Night == `${docid}`)){
             console.log("Doc is not there, Leave can be approved");
             var msg = "Leave Approved" 
         } else {
-        
-            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Morning);
-            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Evening);
-            var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Night);
+            console.log("Doc is there")
+            for (let x in rr[`Day ${day}`].Morning){
+                var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Morning[x]);
+            }
+            for (let x in rr[`Day ${day}`].Evening){
+                var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Evening[x]);
+            }
+            for (let x in rr[`Day ${day}`].Night){
+                var allDocs = arrayRemove(allDocs, rr[`Day ${day}`].Night[x]);
+            }
             if (day != 1){
-                var allDocs = arrayRemove(allDocs, rr[`Day ${day-1}`].Night);
+                for (let x in rr[`Day ${day}`].Night){
+                    var allDocs = arrayRemove(allDocs, rr[`Day ${day-1}`].Night[x]);
+                }
             }
 
             if (allDocs.length == 0){
                 console.log("Leave cannot be approved");
                 var msg = "Leave cannot be approved" 
-            } else if (!!(rr[`Day ${day}`].Morning == `${docid}`)){
+            } else if (!!(rr[`Day ${day}`].Morning.find(element => element == `${docid}`) == `${docid}`)){
                 console.log("Morning");
-                var msg = "Leave Approved" 
-                rr[`Day ${day}`].Morning = [allDocs[0]]
-            }else if (!!(rr[`Day ${day}`].Evening == `${docid}`)){
+                var msg = "Leave Approved";
+                rr[`Day ${day}`].Morning = arrayRemove(rr[`Day ${day}`].Morning, `${docid}`);
+                rr[`Day ${day}`].Morning.push(allDocs[0]);               
+            }else if (!!(rr[`Day ${day}`].Evening.find(element => element == `${docid}`) == `${docid}`)){
                 console.log("Evening");
-                var msg = "Leave Approved" 
-                rr[`Day ${day}`].Evening = [allDocs[0]]
-            }else if (!!(rr[`Day ${day}`].Night == `${docid}`)){
+                var msg = "Leave Approved";
+                rr[`Day ${day}`].Evening = arrayRemove(rr[`Day ${day}`].Evening, `${docid}`);
+                rr[`Day ${day}`].Evening.push(allDocs[0]);
+            }else if (!!(rr[`Day ${day}`].Night.find(element => element == `${docid}`) == `${docid}`)){
                 console.log("Night");
-                var msg = "Leave Approved" 
-                rr[`Day ${day}`].Night = [allDocs[0]]
+                var msg = "Leave Approved";
+                rr[`Day ${day}`].Night = arrayRemove(rr[`Day ${day}`].Night, `${docid}`);
+                rr[`Day ${day}`].Night.push(allDocs[0]);
             }   
         }
 
