@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var app = express();
 const cors = require("cors");
-require("dotenv").config({ path: __dirname + "/env/.env.prod" });
+require("dotenv").config({ path: __dirname + "/env/.env.dev" });
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
@@ -41,7 +41,6 @@ var whitelist = [
 ];
 var corsOptions = {
   origin: function (origin, callback) {
-    console.log(origin);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -57,7 +56,7 @@ app.use(cors(corsOptions));
 //Points to the index file of the routes folder, to guide to all routes.
 app.use(require("./routes"));
 
-// app.use("/api/", require("./routes/doctorRoutes"))
+// app.use("/doctor/", require("./routes/doctorRoutes"))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
