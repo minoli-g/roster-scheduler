@@ -217,8 +217,8 @@ roster = main(num_days,num_minDoctor,all_doctors,leave_doctors,leave_dates_list,
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="chamod1998@CSE",
-  database="roster"
+  password="turtles24",
+  database="rscheduler"
 )
 
 mycursor = mydb.cursor()
